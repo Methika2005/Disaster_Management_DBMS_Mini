@@ -237,26 +237,8 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMRjeuLdX0AyCfRMsP842I
 <th class="px-6 py-4 text-right">Actions</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-surface-container">
-<tr class="hover:bg-surface-container-low transition-colors">
-<td class="px-6 py-4">
-<div class="font-medium text-on-surface">#REQ-4021</div>
-<div class="text-[10px] text-on-surface-variant">2 mins ago</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-sm text-primary">location_on</span>
-                                                Guwahati 
-                                            </div>
-</td>
-<td class="px-6 py-4 font-bold text-primary">45 Units</td>
-<td class="px-6 py-4">
-<div class="flex justify-end gap-2">
-<button class="px-3 py-1.5 rounded-lg text-xs font-bold text-secondary bg-secondary-container/30 hover:bg-secondary-container transition-colors">Approve</button>
-<button class="px-3 py-1.5 rounded-lg text-xs font-bold text-error bg-error-container/30 hover:bg-error-container transition-colors">Reject</button>
-</div>
-</td>
-</tr>
+<tbody id="requestTable" class="divide-y divide-surface-container">
+
 <tr class="bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
 <td class="px-6 py-4">
 <div class="font-medium text-on-surface">#REQ-4019</div>
@@ -402,5 +384,34 @@ function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
+
+async function loadRequests() {
+    try {
+        const res = await fetch("http://localhost:5000/requests");
+        const data = await res.json();
+
+        const table = document.getElementById("requestTable");
+        table.innerHTML = "";
+
+        data.forEach(req => {
+            const row = `
+            <tr class="hover:bg-surface-container-low">
+                <td class="px-6 py-4">#REQ-${req.request_id}</td>
+                <td class="px-6 py-4">${req.camp_location || "N/A"}</td>
+                <td class="px-6 py-4">${req.quantity}</td>
+                <td class="px-6 py-4 text-right">
+                    <button class="px-3 py-1 bg-green-500 text-white rounded">Approve</button>
+                </td>
+            </tr>
+            `;
+            table.innerHTML += row;
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+loadRequests();
 </script>
 </body></html>

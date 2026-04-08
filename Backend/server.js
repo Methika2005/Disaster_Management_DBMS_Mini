@@ -10,7 +10,7 @@ app.use(express.json());
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "root",
     database: "disaster_relief_db_final"
 });
 
@@ -27,6 +27,20 @@ app.get("/requests", (req, res) => {
         } else {
             res.json(result);
         }
+    });
+});
+
+app.get("/resources", (req, res) => {
+    db.query("SELECT * FROM resource", (err, result) => {
+        if (err) res.status(500).send(err);
+        else res.json(result);
+    });
+});
+
+app.get("/inventory", (req, res) => {
+    db.query("SELECT * FROM central_inventory", (err, result) => {
+        if (err) res.status(500).send(err);
+        else res.json(result);
     });
 });
 
