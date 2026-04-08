@@ -1,0 +1,1 @@
+# Disaster_Management_DBMS_Mini
