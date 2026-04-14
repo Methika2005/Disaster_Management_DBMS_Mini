@@ -180,7 +180,7 @@ Logout
 <div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
 <div class="relative z-10">
 <p class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Pending Supply Requests</p>
-<h2 class="display-sm font-headline font-extrabold text-primary">5</h2>
+<h2 id="pendingSupplyRequestsCount" class="display-sm font-headline font-extrabold text-primary">0</h2>
 <div class="mt-4 flex items-center gap-2 text-error text-sm font-medium">
 <span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
 <span>High Priority</span>
@@ -194,7 +194,7 @@ Logout
 <div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
 <div class="relative z-10">
 <p class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Active Shipments</p>
-<h2 class="display-sm font-headline font-extrabold text-primary">2</h2>
+<h2 id="activeShipmentsCount" class="display-sm font-headline font-extrabold text-primary">0</h2>
 <div class="mt-4 flex items-center gap-2 text-secondary text-sm font-medium">
 <span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
 <span>On Track</span>
@@ -208,7 +208,7 @@ Logout
 <div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
 <div class="relative z-10">
 <p class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Delivered Total</p>
-<h2 class="display-sm font-headline font-extrabold text-primary">1,200</h2>
+<h2 id="deliveredTotalCount" class="display-sm font-headline font-extrabold text-primary">0</h2>
 <div class="mt-4 flex items-center gap-2 text-on-surface-variant text-sm font-medium">
 <span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
 <span>Last 30 Days</span>
@@ -226,74 +226,15 @@ Logout
 <div class="flex items-center justify-between">
 <div class="flex items-center gap-3">
 <h2 class="title-md font-bold text-on-surface">Supply Requests</h2>
-<span class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded-full text-xs font-bold">5 NEW</span>
+<span id="newRequestsBadge" class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded-full text-xs font-bold">0 NEW</span>
 </div>
 <button class="bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-medium shadow-sm hover:opacity-90 transition-opacity">
 <span class="material-symbols-outlined text-sm" data-icon="add">add</span>
 <span>Add Supply Entry</span>
 </button>
 </div>
-<div class="space-y-4">
-<!-- Request Card 1 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-surface-container-low transition-colors">
-<div class="flex items-start gap-4">
-<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-primary" data-icon="medication">medication</span>
-</div>
-<div>
-<h4 class="font-bold text-on-surface">Emergency Medical Kits</h4>
-<p class="text-sm text-on-surface-variant">Req ID: #REQ-8821 • Mumbai Port</p>
-<div class="flex gap-2 mt-2">
-<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px] font-bold uppercase tracking-tighter">Urgent</span>
-<span class="text-xs text-on-surface-variant font-medium">Quantity: 500 units</span>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-2 self-end md:self-center">
-<button class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">Details</button>
-<button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-primary-container transition-colors">Accept</button>
-</div>
-</div>
-<!-- Request Card 2 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-surface-container-low transition-colors">
-<div class="flex items-start gap-4">
-<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-primary" data-icon="water_drop">water_drop</span>
-</div>
-<div>
-<h4 class="font-bold text-on-surface">Potable Water Pallets</h4>
-<p class="text-sm text-on-surface-variant">Req ID: #REQ-8904 • Tibet Refugee Camp</p>
-<div class="flex gap-2 mt-2">
-<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-tighter">Standard</span>
-<span class="text-xs text-on-surface-variant font-medium">Quantity: 20 pallets</span>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-2 self-end md:self-center">
-<button class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">Details</button>
-<button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-primary-container transition-colors">Accept</button>
-</div>
-</div>
-<!-- Request Card 3 -->
-<div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-surface-container-low transition-colors">
-<div class="flex items-start gap-4">
-<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-primary" data-icon="electric_bolt">electric_bolt</span>
-</div>
-<div>
-<h4 class="font-bold text-on-surface">Industrial Power Cells</h4>
-<p class="text-sm text-on-surface-variant">Req ID: #REQ-8791 • NDRF Battalion Centre</p>
-<div class="flex gap-2 mt-2">
-<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px] font-bold uppercase tracking-tighter">Urgent</span>
-<span class="text-xs text-on-surface-variant font-medium">Quantity: 12 units</span>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-2 self-end md:self-center">
-<button class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">Details</button>
-<button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-primary-container transition-colors">Accept</button>
-</div>
-</div>
+<div id="supplierRequestsContainer" class="space-y-4">
+<!-- Supply cards will load here -->
 </div>
 </section>
 <!-- Past Deliveries (History View) -->
@@ -304,63 +245,11 @@ Logout
 </div>
 <div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
 <div class="p-2 space-y-1">
-<!-- Delivery Item 1 -->
-<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
-<div class="w-2 h-10 rounded-full bg-secondary"></div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<h5 class="text-sm font-bold">Hygiene Packs</h5>
-<span class="bg-secondary-container text-on-secondary-container label-sm px-2 py-0.5 rounded-full font-bold">Delivered</span>
-</div>
-<p class="text-[11px] text-on-surface-variant mt-1">Arrived Oct 24, 14:20</p>
-</div>
-</div>
-<!-- Delivery Item 2 -->
-<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
-<div class="w-2 h-10 rounded-full bg-tertiary-container"></div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<h5 class="text-sm font-bold">Thermal Blankets</h5>
-<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant label-sm px-2 py-0.5 rounded-full font-bold">In Transit</span>
-</div>
-<p class="text-[11px] text-on-surface-variant mt-1">Est. Arrival Oct 26</p>
-</div>
-</div>
-<!-- Delivery Item 3 -->
-<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
-<div class="w-2 h-10 rounded-full bg-secondary"></div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<h5 class="text-sm font-bold">Rations (Pack-B)</h5>
-<span class="bg-secondary-container text-on-secondary-container label-sm px-2 py-0.5 rounded-full font-bold">Delivered</span>
-</div>
-<p class="text-[11px] text-on-surface-variant mt-1">Arrived Oct 22, 09:15</p>
-</div>
-</div>
-<!-- Delivery Item 4 -->
-<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
-<div class="w-2 h-10 rounded-full bg-secondary"></div>
-<div class="flex-1">
-<div class="flex justify-between items-start">
-<h5 class="text-sm font-bold">Surgical Masks</h5>
-<span class="bg-secondary-container text-on-secondary-container label-sm px-2 py-0.5 rounded-full font-bold">Delivered</span>
-</div>
-<p class="text-[11px] text-on-surface-variant mt-1">Arrived Oct 20, 16:45</p>
+<div id="deliveryHistoryContainer" class="p-2 space-y-1">
+<!-- Delivery history will load here -->
 </div>
 </div>
 </div>
-</div>
-<!-- Shipment Map Preview (Aesthetic context) -->
-<div class="relative h-48 rounded-2xl overflow-hidden group shadow-md">
-<img class="w-full h-full object-cover grayscale brightness-75 group-hover:scale-105 transition-transform duration-500" data-alt="Satellite map view of a city with digital logistics overlays and routes in soft blue and white" data-location="Washington" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDUVgF-Lv7aLz0QrLZfLnAZI9wZSsG-SOAgXKHKHiaBnSjiXOajTfiZzKsKSYeAzntZ8rilrZfvQZWHs-DO9r_nsghVwaV5SCR9voS7IEs2PoiCNcDAdcv5upZnjEdD9B8-V-6XGuGPsSNDvIx8mhQZY1JwhCknoQbBIp5kyiIz-FA1GzL-W_nnQjLRZPhTs-8N672iOOX5H4ehVX4bG9XEsNY33E1o5gQYowr-DHgOsawA1ZApwbwjunFQ-Q8OqxqAlSLJQt3A230"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-<div>
-<h4 class="text-white text-sm font-bold">Fleet Location Alpha</h4>
-<p class="text-white/70 text-xs">Real-time GPS Monitoring</p>
-</div>
-</div>
-</div>
-</section>
 </div>
 </div>
 </main>
@@ -394,7 +283,7 @@ if (isLoggedIn !== "true") {
     window.location.href = "login.html";
 }
 
-if (role !== "supplier") {
+if (role !== "supplier" && role !== "admin") {
     alert("Access Denied!");
     window.location.href = "login.html";
 }
@@ -403,5 +292,103 @@ function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
+
+async function loadSupplierDashboard() {
+    try {
+        const response = await fetch('/supplier-dashboard');
+        const data = await response.json();
+        if (data.success) {
+            document.getElementById('pendingSupplyRequestsCount').textContent = data.pendingSupplyRequests.toLocaleString();
+            document.getElementById('activeShipmentsCount').textContent = data.activeShipments.toLocaleString();
+            document.getElementById('deliveredTotalCount').textContent = data.deliveredTotal.toLocaleString();
+            document.getElementById('newRequestsBadge').textContent = `${data.pendingSupplyRequests} NEW`;
+        }
+    } catch (error) {
+        console.error('Error loading supplier dashboard:', error);
+    }
+}
+
+async function loadSupplierRequests() {
+    try {
+        const response = await fetch('/supplier-requests');
+        const data = await response.json();
+        const container = document.getElementById('supplierRequestsContainer');
+
+        if (data.success && data.requests.length > 0) {
+            container.innerHTML = data.requests.map(request => {
+                const date = request.supply_date ? new Date(request.supply_date).toLocaleDateString() : 'TBD';
+                const statusLabel = request.status ? request.status.toUpperCase() : 'PENDING';
+                const statusClass = statusLabel.includes('PENDING') ? 'bg-error-container text-on-error-container' : 'bg-secondary-container text-on-secondary-container';
+                const resourceName = request.resource_name || 'Resource';
+                const campName = request.camp_name || 'Unknown Camp';
+                const quantityText = request.quantity_supplied ? `${request.quantity_supplied} units` : 'Qty unavailable';
+
+                return `
+                    <div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-surface-container-low transition-colors">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-primary">local_shipping</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-on-surface">${resourceName}</h4>
+                                <p class="text-sm text-on-surface-variant">Req ID: #${request.supply_id || 'N/A'} • ${campName}</p>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="px-2 py-0.5 rounded-full ${statusClass} text-[10px] font-bold uppercase tracking-tighter">${statusLabel}</span>
+                                    <span class="text-xs text-on-surface-variant font-medium">${quantityText}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end md:self-center">
+                            <button class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">Details</button>
+                            <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-primary-container transition-colors">Accept</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            container.innerHTML = '<div class="rounded-xl p-6 bg-surface-container-low text-slate-500">No upcoming supplier requests found.</div>';
+        }
+    } catch (error) {
+        console.error('Error loading supplier requests:', error);
+    }
+}
+
+async function loadDeliveryHistory() {
+    try {
+        const response = await fetch('/supplier-deliveries');
+        const data = await response.json();
+        const container = document.getElementById('deliveryHistoryContainer');
+
+        if (data.success && data.deliveries.length > 0) {
+            container.innerHTML = data.deliveries.map(delivery => {
+                const dateText = delivery.fulfillment_date ? new Date(delivery.fulfillment_date).toLocaleDateString() : 'Unknown date';
+                const title = delivery.resource_name || 'Delivered Item';
+                const campName = delivery.camp_name || 'Destination';
+                return `
+                    <div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
+                        <div class="w-2 h-10 rounded-full bg-secondary"></div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <h5 class="text-sm font-bold">${title}</h5>
+                                <span class="bg-secondary-container text-on-secondary-container label-sm px-2 py-0.5 rounded-full font-bold">Delivered</span>
+                            </div>
+                            <p class="text-[11px] text-on-surface-variant mt-1">${campName} • ${dateText}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            container.innerHTML = '<div class="rounded-xl p-4 bg-surface-container-low text-slate-500">No delivery history available.</div>';
+        }
+    } catch (error) {
+        console.error('Error loading delivery history:', error);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadSupplierDashboard();
+    loadSupplierRequests();
+    loadDeliveryHistory();
+});
 </script>
 </body></html>

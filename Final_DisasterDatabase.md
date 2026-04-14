@@ -795,4 +795,3 @@ mysql> select \* from supplier;
 
 
 mysql>
-

@@ -167,12 +167,12 @@ Logout
 <span class="material-symbols-outlined text-primary" data-icon="inventory">inventory</span>
 </div>
 <div class="flex flex-col">
-<span class="font-manrope text-4xl font-extrabold text-primary">84%</span>
+<span id="localStockPercent" class="font-manrope text-4xl font-extrabold text-primary">0%</span>
 <div class="mt-2 w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
-<div class="bg-secondary h-full" style="width: 84%;"></div>
+<div id="localStockBar" class="bg-secondary h-full" style="width: 0%;"></div>
 </div>
 </div>
-<p class="text-xs text-on-surface-variant">Food &amp; Water reserves stable</p>
+<p id="localStockDescription" class="text-xs text-on-surface-variant">Loading local reserve status…</p>
 </div>
 <!-- Area Requests -->
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_12px_40px_rgba(17,28,44,0.06)] flex flex-col gap-4">
@@ -181,13 +181,13 @@ Logout
 <span class="material-symbols-outlined text-tertiary" data-icon="location_on">location_on</span>
 </div>
 <div class="flex flex-col">
-<span class="font-manrope text-4xl font-extrabold text-on-background">12</span>
-<div class="flex items-center gap-1 text-secondary mt-1">
+<span id="areaRequestsCount" class="font-manrope text-4xl font-extrabold text-on-background">0</span>
+<div id="areaRequestsTrend" class="flex items-center gap-1 text-secondary mt-1 opacity-0 transition-opacity duration-200">
 <span class="material-symbols-outlined text-sm" data-icon="trending_down">trending_down</span>
-<span class="text-xs font-semibold">-4 from yesterday</span>
+<span id="areaRequestsTrendText" class="text-xs font-semibold">0 from yesterday</span>
 </div>
 </div>
-<p class="text-xs text-on-surface-variant">Active field reports</p>
+<p id="areaRequestsDescription" class="text-xs text-on-surface-variant">Loading field reports…</p>
 </div>
 <!-- Pending Fulfillment -->
 <div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_12px_40px_rgba(17,28,44,0.06)] flex flex-col gap-4">
@@ -196,13 +196,13 @@ Logout
 <span class="material-symbols-outlined text-primary" data-icon="pending_actions">pending_actions</span>
 </div>
 <div class="flex flex-col">
-<span class="font-manrope text-4xl font-extrabold text-on-background">07</span>
-<div class="flex items-center gap-1 text-error mt-1">
+<span id="pendingFulfillmentCount" class="font-manrope text-4xl font-extrabold text-on-background">0</span>
+<div id="pendingFulfillmentTrend" class="flex items-center gap-1 text-error mt-1 opacity-0 transition-opacity duration-200">
 <span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
-<span class="text-xs font-semibold">2 High Priority</span>
+<span id="pendingFulfillmentTrendText" class="text-xs font-semibold">0 High Priority</span>
 </div>
 </div>
-<p class="text-xs text-on-surface-variant">Estimated resolution: 3h</p>
+<p id="pendingFulfillmentDescription" class="text-xs text-on-surface-variant">Loading fulfillment status…</p>
 </div>
 </div>
 <!-- Shortage Alert System -->
@@ -216,35 +216,8 @@ Logout
 </div>
 <span class="px-3 py-1 bg-error rounded-full text-[10px] uppercase tracking-wider font-bold text-white">Critical</span>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-<div class="bg-surface-container-lowest p-4 rounded-lg flex justify-between items-center">
-<div>
-<p class="text-on-surface-variant text-xs uppercase font-bold tracking-tight">Food Packets</p>
-<p class="text-2xl font-bold text-error">120 <span class="text-sm font-normal text-on-surface-variant">/ 500 min</span></p>
-</div>
-<span class="material-symbols-outlined text-error text-3xl" data-icon="restaurant" data-weight="fill" style="font-variation-settings: 'FILL' 1;">restaurant</span>
-</div>
-<div class="bg-surface-container-lowest p-4 rounded-lg flex justify-between items-center opacity-70">
-<div>
-<p class="text-on-surface-variant text-xs uppercase font-bold tracking-tight">Potable Water</p>
-<p class="text-2xl font-bold text-on-background">2,400L</p>
-</div>
-<span class="material-symbols-outlined text-primary text-3xl" data-icon="water_drop">water_drop</span>
-</div>
-<div class="bg-surface-container-lowest p-4 rounded-lg flex justify-between items-center opacity-70">
-<div>
-<p class="text-on-surface-variant text-xs uppercase font-bold tracking-tight">First Aid Kits</p>
-<p class="text-2xl font-bold text-on-background">45</p>
-</div>
-<span class="material-symbols-outlined text-secondary text-3xl" data-icon="medical_services">medical_services</span>
-</div>
-<div class="bg-surface-container-lowest p-4 rounded-lg flex justify-between items-center opacity-70">
-<div>
-<p class="text-on-surface-variant text-xs uppercase font-bold tracking-tight">Blankets</p>
-<p class="text-2xl font-bold text-on-background">310</p>
-</div>
-<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="bed">bed</span>
-</div>
+<div id="shortageCards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- shortage cards will be rendered here -->
 </div>
 </section>
 <!-- Main View Table: Requests from Affected Areas -->
@@ -271,89 +244,10 @@ Logout
 <th class="px-6 py-4 text-right">Actions</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant/5">
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="px-6 py-4">
-<div class="flex flex-col">
-<span class="font-semibold text-on-background">Arakkonam</span>
-<span class="text-xs text-on-surface-variant">Requested by: Smita Pillai</span>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 text-sm font-medium text-on-background">
-<span class="material-symbols-outlined text-sm text-tertiary" data-icon="restaurant">restaurant</span>
-                                        Food Packets
-                                    </span>
-</td>
-<td class="px-6 py-4 font-mono text-sm">200 Units</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase">Pending</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary font-bold text-xs uppercase hover:underline decoration-2 underline-offset-4">Mark as Fulfilled</button>
-</td>
-</tr>
-<tr class="bg-surface-container-low/20">
-<td class="px-6 py-4">
-<div class="flex flex-col">
-<span class="font-semibold text-on-background">NDRF Battalion Centre </span>
-<span class="text-xs text-on-surface-variant">Requested by: Vijay Srivastav</span>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 text-sm font-medium text-on-background">
-<span class="material-symbols-outlined text-sm text-primary" data-icon="water_drop">water_drop</span>
-                                        Drinking Water
-                                    </span>
-</td>
-<td class="px-6 py-4 font-mono text-sm">500 Liters</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase">Processing</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary font-bold text-xs uppercase hover:underline decoration-2 underline-offset-4">Mark as Fulfilled</button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="px-6 py-4">
-<div class="flex flex-col">
-<span class="font-semibold text-on-background">Tibetan Refugee Camp</span>
-<span class="text-xs text-on-surface-variant">Requested by: Isha Bora</span>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 text-sm font-medium text-on-background">
-<span class="material-symbols-outlined text-sm text-secondary" data-icon="medical_services">medical_services</span>
-                                        Hygiene Kits
-                                    </span>
-</td>
-<td class="px-6 py-4 font-mono text-sm">50 Sets</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase">Pending</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary font-bold text-xs uppercase hover:underline decoration-2 underline-offset-4">Mark as Fulfilled</button>
-</td>
-</tr>
-<tr class="bg-surface-container-low/20">
-<td class="px-6 py-4">
-<div class="flex flex-col">
-<span class="font-semibold text-on-background">Mohanpur</span>
-<span class="text-xs text-on-surface-variant">Requested by: Tilak Sharma</span>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 text-sm font-medium text-on-background">
-<span class="material-symbols-outlined text-sm text-primary" data-icon="battery_full">battery_full</span>
-                                        Power Cells
-                                    </span>
-</td>
-<td class="px-6 py-4 font-mono text-sm">20 Units</td>
-<td class="px-6 py-4">
-<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase">Processing</span>
-</td>
-<td class="px-6 py-4 text-right">
-<button class="text-secondary font-bold text-xs uppercase hover:underline decoration-2 underline-offset-4">Mark as Fulfilled</button>
+<tbody id="campRequestsTableBody" class="divide-y divide-outline-variant/5">
+<tr id="campRequestsEmptyRow" class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4 text-slate-500" colspan="5">
+No camp requests found.
 </td>
 </tr>
 </tbody>
@@ -395,7 +289,7 @@ if (isLoggedIn !== "true") {
     window.location.href = "login.html";
 }
 
-if (role !== "camp") {
+if (role !== "camp" && role !== "admin") {
     alert("Access Denied!");
     window.location.href = "login.html";
 }
@@ -404,5 +298,129 @@ function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
+
+async function loadCampDashboard() {
+    try {
+        const response = await fetch('/camp-dashboard');
+        const data = await response.json();
+        if (data.success) {
+            const localPercent = Math.max(0, Math.min(100, data.localStockPercent || 0));
+            document.getElementById('localStockPercent').textContent = `${localPercent}%`;
+            document.getElementById('localStockBar').style.width = `${localPercent}%`;
+            document.getElementById('localStockDescription').textContent = localPercent < 40 ? 'Stock is low; replenishment needed' : 'Food & Water reserves stable';
+
+            document.getElementById('areaRequestsCount').textContent = data.totalRequests.toLocaleString();
+            document.getElementById('areaRequestsDescription').textContent = 'Active field reports';
+
+            document.getElementById('pendingFulfillmentCount').textContent = data.pendingFulfillment.toLocaleString();
+            document.getElementById('pendingFulfillmentTrendText').textContent = `${data.highPriority || 0} High Priority`;
+            document.getElementById('pendingFulfillmentTrend').classList.toggle('opacity-0', data.highPriority === 0);
+        }
+    } catch (error) {
+        console.error('Error loading camp dashboard:', error);
+    }
+}
+
+async function loadShortageCards() {
+    try {
+        const response = await fetch('/camp-shortages');
+        const data = await response.json();
+        const container = document.getElementById('shortageCards');
+
+        if (data.success && data.shortages.length > 0) {
+            container.innerHTML = data.shortages.map(item => {
+                const ratio = item.minimum_threshold > 0 ? (item.quantity_available / item.minimum_threshold) : 1;
+                const statusText = item.quantity_available === 0 ? 'Out of stock' : ratio < 0.5 ? 'Low stock' : 'Stock stable';
+                const statusClass = item.quantity_available === 0 ? 'bg-error-container text-on-error-container' : ratio < 0.5 ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant' : 'bg-secondary-container text-on-secondary-container';
+                return `
+                    <div class="bg-surface-container-lowest p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="text-on-surface-variant text-xs uppercase font-bold tracking-tight">${item.resource_name || 'Resource'}</p>
+                            <p class="text-2xl font-bold text-on-background">${item.quantity_available || 0} ${item.quantity_available === 1 ? 'unit' : 'units'}</p>
+                        </div>
+                        <span class="material-symbols-outlined text-primary text-3xl">inventory_2</span>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusText}</span>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            container.innerHTML = '<div class="bg-surface-container-lowest p-6 rounded-xl text-slate-500">No active shortages found.</div>';
+        }
+    } catch (error) {
+        console.error('Error loading shortage cards:', error);
+    }
+}
+
+async function loadCampRequests() {
+    try {
+        const response = await fetch('/camp-requests');
+        const data = await response.json();
+        const tbody = document.getElementById('campRequestsTableBody');
+        const emptyRow = document.getElementById('campRequestsEmptyRow');
+
+        if (data.success && data.requests.length > 0) {
+            emptyRow.style.display = 'none';
+            tbody.innerHTML = data.requests.map(request => {
+                const status = request.status || 'PENDING';
+                const statusClass = status === 'COMPLETED' ? 'bg-secondary-container text-on-secondary-container' : status === 'PENDING' ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant' : 'bg-secondary-container text-on-secondary-container';
+                const isCompleted = status === 'COMPLETED';
+                return `
+                    <tr class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-on-background">${request.camp_name || 'Unknown Camp'}</span>
+                                <span class="text-xs text-on-surface-variant">Req ID: #${request.request_id}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 text-sm font-medium text-on-background">
+                                <span class="material-symbols-outlined text-sm text-primary">inventory_2</span>
+                                ${request.resource_name || 'Resource'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-sm">${request.quantity_required || 0}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${status}</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            ${isCompleted ? `<span class="text-slate-500 text-xs font-semibold uppercase">Fulfilled</span>` : `<button onclick="updateCampRequestStatus(${request.request_id}, 'COMPLETED')" class="text-secondary font-bold text-xs uppercase hover:underline decoration-2 underline-offset-4">Mark as Fulfilled</button>`}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        } else {
+            tbody.innerHTML = '<tr class="hover:bg-surface-container-low/50 transition-colors"><td class="px-6 py-4 text-slate-500" colspan="5">No camp requests found.</td></tr>';
+            emptyRow.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error loading camp requests:', error);
+    }
+}
+
+async function updateCampRequestStatus(requestId, status) {
+    try {
+        const response = await fetch('/camp-update-request-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requestId, status })
+        });
+        const data = await response.json();
+        if (data.success) {
+            await loadCampRequests();
+            await loadCampDashboard();
+        } else {
+            alert('Failed to update request status');
+        }
+    } catch (error) {
+        console.error('Error updating request status:', error);
+        alert('Error updating request status');
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadCampDashboard();
+    loadShortageCards();
+    loadCampRequests();
+});
 </script>
 </body></html>

@@ -169,7 +169,7 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMRjeuLdX0AyCfRMsP842I
                         Current Stock
                     </span>
 <div class="flex items-baseline gap-2 mt-2">
-<span class="text-4xl font-extrabold text-primary font-headline">8,420</span>
+<span id="currentStockCount" class="text-4xl font-extrabold text-primary font-headline">8,420</span>
 <span class="text-secondary text-xs font-bold">+2.4%</span>
 </div>
 <div class="w-full bg-surface-container-low h-1 rounded-full mt-4 overflow-hidden">
@@ -183,7 +183,7 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMRjeuLdX0AyCfRMsP842I
                         Incoming Supplies
                     </span>
 <div class="flex items-baseline gap-2 mt-2">
-<span class="text-4xl font-extrabold text-primary font-headline">3</span>
+<span id="incomingSuppliesCount" class="text-4xl font-extrabold text-primary font-headline">3</span>
 <span class="text-on-surface-variant text-sm">Trucks</span>
 </div>
 <p class="text-xs text-on-surface-variant mt-2">Expected by 16:00 UTC</p>
@@ -195,7 +195,7 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMRjeuLdX0AyCfRMsP842I
                         Pending Camp Requests
                     </span>
 <div class="flex items-baseline gap-2 mt-2">
-<span class="text-4xl font-extrabold text-tertiary font-headline">12</span>
+<span id="pendingRequestsCount" class="text-4xl font-extrabold text-tertiary font-headline">12</span>
 <span class="text-on-surface-variant text-sm">Active</span>
 </div>
 <span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full self-start mt-2">High Priority</span>
@@ -207,7 +207,7 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMRjeuLdX0AyCfRMsP842I
                         Dispatched Today
                     </span>
 <div class="flex items-baseline gap-2 mt-2">
-<span class="text-4xl font-extrabold text-primary font-headline">150</span>
+<span id="dispatchedTodayCount" class="text-4xl font-extrabold text-primary font-headline">150</span>
 <span class="text-on-surface-variant text-sm">Units</span>
 </div>
 <div class="flex gap-1 mt-3">
@@ -237,124 +237,47 @@ src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMRjeuLdX0AyCfRMsP842I
 <th class="px-6 py-4 text-right">Actions</th>
 </tr>
 </thead>
-<tbody id="requestTable" class="divide-y divide-surface-container">
-
-<tr class="bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
-<td class="px-6 py-4">
-<div class="font-medium text-on-surface">#REQ-4019</div>
-<div class="text-[10px] text-on-surface-variant">15 mins ago</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-sm text-primary">location_on</span>
-                                                Mohanpur
-                                            </div>
-</td>
-<td class="px-6 py-4 font-bold text-primary">120 Units</td>
-<td class="px-6 py-4 text-right">
-<button class="px-4 py-1.5 rounded-lg text-xs font-bold bg-primary text-on-primary shadow-sm hover:opacity-90 transition-opacity">Dispatch</button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low transition-colors">
-<td class="px-6 py-4">
-<div class="font-medium text-on-surface">#REQ-3998</div>
-<div class="text-[10px] text-on-surface-variant">1 hour ago</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-sm text-primary">location_on</span>
-                                                Arrakonam
-                                            </div>
-</td>
-<td class="px-6 py-4 font-bold text-primary">15 Units</td>
-<td class="px-6 py-4 text-right">
-<button class="px-4 py-1.5 rounded-lg text-xs font-bold bg-primary text-on-primary shadow-sm hover:opacity-90 transition-opacity">Dispatch</button>
+<tbody id="requestsTableBody" class="divide-y divide-surface-container">
+<tr id="requestsEmptyRow" class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 text-slate-500" colspan="4">
+No pending requests found.
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<!-- Visual Analytics Placeholder -->
-<div class="bg-surface-container-low rounded-xl p-6 relative overflow-hidden h-64">
-<div class="relative z-10">
-<h3 class="text-lg font-bold text-primary mb-1">Dispatch Trajectory</h3>
-<p class="text-sm text-on-surface-variant">Projected resource flow for the next 24h</p>
-</div>
-<div class="absolute bottom-0 left-0 w-full px-6 flex items-end gap-2 h-32">
-<div class="flex-1 bg-primary/20 rounded-t-md h-[40%]"></div>
-<div class="flex-1 bg-primary/20 rounded-t-md h-[55%]"></div>
-<div class="flex-1 bg-primary/20 rounded-t-md h-[45%]"></div>
-<div class="flex-1 bg-primary/40 rounded-t-md h-[70%]"></div>
-<div class="flex-1 bg-primary/20 rounded-t-md h-[60%]"></div>
-<div class="flex-1 bg-primary/80 rounded-t-md h-[90%]"></div>
-<div class="flex-1 bg-secondary rounded-t-md h-[30%]"></div>
-<div class="flex-1 bg-secondary/60 rounded-t-md h-[40%]"></div>
-</div>
-</div>
 </div>
 <!-- Side Info Panel -->
 <div class="flex flex-col gap-6">
 <!-- Inventory Stock List -->
-<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
-<div class="flex items-center justify-between mb-6">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
+<div class="px-6 py-5 flex justify-between items-center bg-surface-container-low">
 <h3 class="font-bold text-primary">Inventory Stock</h3>
 <span class="material-symbols-outlined text-on-surface-variant cursor-pointer">filter_list</span>
 </div>
-<div class="space-y-4">
-<!-- Item -->
-<div class="flex items-center justify-between group">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Medical Kits (Standard)</span>
-<span class="text-xs text-on-surface-variant">2,450 Units</span>
-</div>
-<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded-full uppercase">In Stock</span>
-</div>
-<!-- Item -->
-<div class="flex items-center justify-between group">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Thermal Blankets</span>
-<span class="text-xs text-on-surface-variant">420 Units</span>
-</div>
-<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-2 py-1 rounded-full uppercase">Low Stock</span>
-</div>
-<!-- Item -->
-<div class="flex items-center justify-between group">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Portable Power Cells</span>
-<span class="text-xs text-on-surface-variant">0 Units</span>
-</div>
-<span class="bg-error-container text-on-error-container text-[10px] font-bold px-2 py-1 rounded-full uppercase">Out of Stock</span>
-</div>
-<!-- Item -->
-<div class="flex items-center justify-between group">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Water Purification Tablets</span>
-<span class="text-xs text-on-surface-variant">5,200 Units</span>
-</div>
-<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded-full uppercase">In Stock</span>
-</div>
-<!-- Item -->
-<div class="flex items-center justify-between group">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Emergency Rations</span>
-<span class="text-xs text-on-surface-variant">1,100 Units</span>
-</div>
-<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded-full uppercase">In Stock</span>
-</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="text-xs uppercase tracking-wider text-on-surface-variant font-bold">
+<tr class="bg-surface">
+<th class="px-6 py-4">Resource</th>
+<th class="px-6 py-4">Location</th>
+<th class="px-6 py-4">Quantity</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody id="inventoryTableBody" class="divide-y divide-surface-container">
+<tr id="inventoryEmptyRow" class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 text-slate-500" colspan="4">
+No inventory items found.
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <button class="w-full mt-6 py-3 bg-surface-container-low text-primary text-sm font-bold rounded-xl hover:bg-surface-container-high transition-colors">
                             Manage Full Stock
                         </button>
-</div>
-<!-- Warehouse Map Preview -->
-<div class="rounded-xl overflow-hidden relative h-48 shadow-lg group">
-<img alt="Warehouse Map" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="clean overhead map view of a modern warehouse floor plan with labeled resource zones and loading docks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRjrJgLvt5yJ7cmeZ855p_f3r3YenywdkXncSGRInNb67_V6nKCJy1VDcpjXtTVIhEJ0FVkdt4fDbummuQa2_nCFaU1fx8zWClcRRyEKqGSOA2GMZYirJQBgmZWK18rNGfo1K58X9SBxMNnNcNgiuITLJR13t1eAsN20VPn6pTYC7L13iZl4nUfJ2EhGPkK7X06QY9wiDHhXVN5oY41UEsRktMDhhlaIsZpryXyt50lXl6LieMp-5d1zWey_W3PofkhrpEYvTopHhC"/>
-<div class="absolute inset-0 bg-primary/20 backdrop-blur-[2px]"></div>
-<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur p-2 rounded-lg text-[10px] font-bold text-primary flex items-center gap-1 shadow-sm">
-<span class="w-2 h-2 rounded-full bg-secondary"></span>
-                            ACTIVE LOADING: DOCK 4
-                        </div>
 </div>
 </div>
 </div>
@@ -375,7 +298,7 @@ if (isLoggedIn !== "true") {
     window.location.href = "login.html";
 }
 
-if (role !== "inventory") {
+if (role !== "inventory" && role !== "admin") {
     alert("Access Denied!");
     window.location.href = "login.html";
 }
@@ -385,33 +308,151 @@ function logout() {
     window.location.href = "login.html";
 }
 
-async function loadRequests() {
+// Load dashboard data
+async function loadDashboardData() {
     try {
-        const res = await fetch("http://localhost:5000/requests");
-        const data = await res.json();
+        const response = await fetch('/inventory-dashboard');
+        const data = await response.json();
 
-        const table = document.getElementById("requestTable");
-        table.innerHTML = "";
-
-        data.forEach(req => {
-            const row = `
-            <tr class="hover:bg-surface-container-low">
-                <td class="px-6 py-4">#REQ-${req.request_id}</td>
-                <td class="px-6 py-4">${req.camp_location || "N/A"}</td>
-                <td class="px-6 py-4">${req.quantity}</td>
-                <td class="px-6 py-4 text-right">
-                    <button class="px-3 py-1 bg-green-500 text-white rounded">Approve</button>
-                </td>
-            </tr>
-            `;
-            table.innerHTML += row;
-        });
-
-    } catch (err) {
-        console.error(err);
+        if (data.success) {
+            document.getElementById('currentStockCount').textContent = data.currentStockCount.toLocaleString();
+            document.getElementById('incomingSuppliesCount').textContent = data.incomingSuppliesCount;
+            document.getElementById('pendingRequestsCount').textContent = data.pendingRequestsCount;
+            document.getElementById('dispatchedTodayCount').textContent = data.dispatchedTodayCount;
+        }
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
     }
 }
 
-loadRequests();
+// Load requests data
+async function loadRequestsData() {
+    try {
+        const response = await fetch('/inventory-requests');
+        const data = await response.json();
+
+        const tbody = document.getElementById('requestsTableBody');
+        const emptyRow = document.getElementById('requestsEmptyRow');
+
+        if (data.success && data.requests.length > 0) {
+            emptyRow.style.display = 'none';
+            tbody.innerHTML = data.requests.map(request => `
+                <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-on-surface">#${request.request_id}</div>
+                        <div class="text-[10px] text-on-surface-variant">${new Date(request.request_date).toLocaleDateString()}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm text-primary">location_on</span>
+                            ${request.camp_name || 'Unknown Camp'}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-bold text-primary">${request.quantity} Units</td>
+                    <td class="px-6 py-4">
+                        <div class="flex justify-end gap-2">
+                            ${request.status === 'pending' ? `
+                                <button onclick="updateRequestStatus(${request.request_id}, 'approved')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-secondary bg-secondary-container/30 hover:bg-secondary-container transition-colors">Approve</button>
+                                <button onclick="updateRequestStatus(${request.request_id}, 'rejected')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-error bg-error-container/30 hover:bg-error-container transition-colors">Reject</button>
+                            ` : `
+                                <button class="px-4 py-1.5 rounded-lg text-xs font-bold bg-primary text-on-primary shadow-sm">Dispatched</button>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else {
+            emptyRow.style.display = '';
+        }
+    } catch (error) {
+        console.error('Error loading requests data:', error);
+    }
+}
+
+// Load inventory stock data
+async function loadInventoryData() {
+    try {
+        const response = await fetch('/inventory-stock');
+        const data = await response.json();
+
+        const tbody = document.getElementById('inventoryTableBody');
+        const emptyRow = document.getElementById('inventoryEmptyRow');
+
+        if (data.success && data.inventory.length > 0) {
+            emptyRow.style.display = 'none';
+            tbody.innerHTML = data.inventory.map(item => {
+                let statusClass = 'bg-secondary-container text-on-secondary-container';
+                let statusText = 'In Stock';
+
+                if (item.quantity === 0) {
+                    statusClass = 'bg-error-container text-on-error-container';
+                    statusText = 'Out of Stock';
+                } else if (item.quantity < 100) {
+                    statusClass = 'bg-tertiary-fixed text-on-tertiary-fixed';
+                    statusText = 'Low Stock';
+                }
+
+                return `
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-on-surface">${item.resource_name}</div>
+                            <div class="text-[10px] text-on-surface-variant">${item.category || 'General'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm text-primary">location_on</span>
+                                Central Warehouse
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 font-bold text-primary">${item.quantity.toLocaleString()} Units</td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-end gap-2">
+                                <button class="px-3 py-1.5 rounded-lg text-xs font-bold text-secondary bg-secondary-container/30 hover:bg-secondary-container transition-colors">Edit</button>
+                                <button class="px-3 py-1.5 rounded-lg text-xs font-bold text-error bg-error-container/30 hover:bg-error-container transition-colors">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        } else {
+            emptyRow.style.display = '';
+        }
+    } catch (error) {
+        console.error('Error loading inventory data:', error);
+    }
+}
+
+// Update request status
+async function updateRequestStatus(requestId, status) {
+    try {
+        const response = await fetch('/update-request-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ requestId, status })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Reload data after update
+            loadRequestsData();
+            loadDashboardData();
+        } else {
+            alert('Failed to update request status');
+        }
+    } catch (error) {
+        console.error('Error updating request status:', error);
+        alert('Error updating request status');
+    }
+}
+
+// Load all data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+    loadRequestsData();
+    loadInventoryData();
+});
 </script>
 </body></html>

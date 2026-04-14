@@ -142,38 +142,38 @@ Logout
 </div>
 </div>
 <nav class="w-full flex flex-col gap-1">
-<a class="border-l-4 border-blue-900 dark:border-blue-400 bg-white dark:bg-slate-900 text-blue-900 dark:text-blue-50 py-3 px-4 font-medium flex items-center gap-3 transition-all" href="#">
+<a class="border-l-4 border-blue-900 dark:border-blue-400 bg-white dark:bg-slate-900 text-blue-900 dark:text-blue-50 py-3 px-4 font-medium flex items-center gap-3 transition-all" href="admin.html">
 <span class="material-symbols-outlined" data-icon="group">group</span>
                         Users
                     </a>
-<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="admin.html">
 <span class="material-symbols-outlined" data-icon="shield_person">shield_person</span>
                         Roles
                     </a>
-<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="resource_management.html">
 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                         Resources
                     </a>
-<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="inventory_manager.html">
 <span class="material-symbols-outlined" data-icon="analytics">analytics</span>
                         Stock
                     </a>
-<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="camp_manager.html">
 <span class="material-symbols-outlined" data-icon="description">description</span>
                         Requests
                     </a>
-<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="supplier.html">
 <span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
                         Dispatch
                     </a>
-<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 px-4 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all font-medium" href="supplier.html">
 <span class="material-symbols-outlined" data-icon="history">history</span>
                         History
                     </a>
 </nav>
 </div>
 <div class="mt-auto px-6 py-6 border-t border-slate-200 dark:border-slate-800">
-<a class="text-slate-600 dark:text-slate-400 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all rounded-lg px-4" href="#">
+<a class="text-slate-600 dark:text-slate-400 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all rounded-lg px-4" href="admin.html">
 <span class="material-symbols-outlined" data-icon="settings">settings</span>
                     Settings
                 </a>
@@ -196,7 +196,7 @@ Logout
 </div>
 <div>
 <p class="text-on-surface-variant text-sm font-medium mb-1">Total Camps</p>
-<h3 class="text-4xl font-extrabold text-primary">24</h3>
+<h3 id="totalCampsCount" class="text-4xl font-extrabold text-primary">24</h3>
 </div>
 </div>
 <!-- KPI: Total Inventory -->
@@ -207,7 +207,7 @@ Logout
 </div>
 <div>
 <p class="text-on-surface-variant text-sm font-medium mb-1">Total Inventory</p>
-<h3 class="text-4xl font-extrabold text-primary">15,400 <span class="text-lg font-medium opacity-60">units</span></h3>
+<h3 id="totalInventoryCount" class="text-4xl font-extrabold text-primary">15,400 <span class="text-lg font-medium opacity-60">units</span></h3>
 </div>
 </div>
 <!-- KPI: Active Requests -->
@@ -221,7 +221,7 @@ Logout
 </div>
 <div>
 <p class="text-on-surface-variant text-sm font-medium mb-1">Active Requests</p>
-<h3 class="text-4xl font-extrabold text-primary">45</h3>
+<h3 id="activeRequestsCount" class="text-4xl font-extrabold text-primary">45</h3>
 </div>
 </div>
 <!-- KPI: Shortages (Alert) -->
@@ -232,7 +232,7 @@ Logout
 </div>
 <div>
 <p class="text-on-error-container text-sm font-bold mb-1">Shortages Detected</p>
-<h3 class="text-4xl font-extrabold text-on-error-container">8</h3>
+<h3 id="shortageCount" class="text-4xl font-extrabold text-on-error-container">8</h3>
 </div>
 </div>
 </div>
@@ -243,11 +243,12 @@ Logout
 <h3 class="text-xl font-bold text-on-background">System User Directory</h3>
 <p class="text-sm text-on-surface-variant">Manage administrative access and role assignments.</p>
 </div>
-<div class="flex gap-3 w-full sm:w-auto">
-<button class="flex-1 sm:flex-none px-4 py-2 bg-surface-container-low hover:bg-surface-container text-primary font-semibold text-sm rounded-lg transition-colors flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
-                            Filter
-                        </button>
+<div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+<div class="flex items-center gap-2 rounded-full bg-surface-container p-1">
+<button id="tableModeResources" onclick="setTableMode('resources')" class="px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold transition-colors">Resources</button>
+<button id="tableModeRequests" onclick="setTableMode('requests')" class="px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary transition-colors">Requests</button>
+<button id="tableModeInventory" onclick="setTableMode('inventory')" class="px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary transition-colors">Inventory</button>
+</div>
 <button class="flex-1 sm:flex-none px-4 py-2 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
 <span class="material-symbols-outlined text-lg" data-icon="person_add">person_add</span>
                             Add User
@@ -257,114 +258,25 @@ Logout
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
 <thead>
-<tr class="bg-surface-container-low">
-<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Personnel</th>
-<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Role</th>
-<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Access Level</th>
+<tr id="dashboardTableHead" class="bg-surface-container-low">
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Resource</th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Unit</th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Available</th>
 <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
-<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Last Active</th>
-<th class="px-8 py-4"></th>
+<th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500"></th>
 </tr>
 </thead>
-<tbody class="divide-y divide-surface-variant/20">
-<tr class="hover:bg-surface-bright transition-colors group">
-<td class="px-8 py-5">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center font-bold text-on-primary-fixed">SC</div>
-<div>
-<p class="font-bold text-on-surface">Aarav Mishra</p>
-<p class="text-xs text-on-surface-variant">a.mishra@tacticalcalm.org</p>
-</div>
-</div>
-</td>
-<td class="px-8 py-5">
-<span class="text-sm font-medium text-on-surface">Field Manager</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-bold text-primary-container">LEVEL 4</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-secondary"></div>
-<span class="text-sm font-medium">Active</span>
-</div>
-</td>
-<td class="px-8 py-5">
-<span class="text-sm text-on-surface-variant">2 mins ago</span>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="opacity-0 group-hover:opacity-100 p-2 hover:bg-slate-100 rounded-lg transition-all">
-<span class="material-symbols-outlined text-slate-400" data-icon="more_vert">more_vert</span>
-</button>
-</td>
-</tr>
-<tr class="hover:bg-surface-bright transition-colors group">
-<td class="px-8 py-5">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center font-bold text-on-secondary-fixed">MB</div>
-<div>
-<p class="font-bold text-on-surface">Aditi Roy</p>
-<p class="text-xs text-on-surface-variant">aditiroy@tacticalcalm.org</p>
-</div>
-</div>
-</td>
-<td class="px-8 py-5">
-<span class="text-sm font-medium text-on-surface">Inventory Specialist</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-bold text-primary-container">LEVEL 2</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-secondary"></div>
-<span class="text-sm font-medium">Active</span>
-</div>
-</td>
-<td class="px-8 py-5">
-<span class="text-sm text-on-surface-variant">14 mins ago</span>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="opacity-0 group-hover:opacity-100 p-2 hover:bg-slate-100 rounded-lg transition-all">
-<span class="material-symbols-outlined text-slate-400" data-icon="more_vert">more_vert</span>
-</button>
-</td>
-</tr>
-<tr class="hover:bg-surface-bright transition-colors group">
-<td class="px-8 py-5">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center font-bold text-on-tertiary-fixed">DR</div>
-<div>
-<p class="font-bold text-on-surface">Ganesh Patil</p>
-<p class="text-xs text-on-surface-variant">gp123@tacticalcalm.org</p>
-</div>
-</div>
-</td>
-<td class="px-8 py-5">
-<span class="text-sm font-medium text-on-surface">Logistician</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-3 py-1 bg-surface-container-high rounded-full text-[11px] font-bold text-primary-container">LEVEL 3</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-slate-300"></div>
-<span class="text-sm font-medium text-slate-400">Offline</span>
-</div>
-</td>
-<td class="px-8 py-5">
-<span class="text-sm text-on-surface-variant">3 hours ago</span>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="opacity-0 group-hover:opacity-100 p-2 hover:bg-slate-100 rounded-lg transition-all">
-<span class="material-symbols-outlined text-slate-400" data-icon="more_vert">more_vert</span>
-</button>
+<tbody id="resourceTableBody" class="divide-y divide-surface-variant/20">
+<tr id="resourceEmptyRow" class="hover:bg-surface-bright transition-colors group">
+<td class="px-8 py-5 text-slate-500" colspan="5">
+No resource data loaded yet.
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="px-8 py-6 bg-surface-container-low/50 flex items-center justify-between">
-<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Showing 3 of 142 Admin Users</p>
+<p id="tableSummary" class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Showing 0 resources</p>
 <div class="flex gap-2">
 <button class="p-2 hover:bg-white rounded-lg transition-colors border border-outline-variant/30">
 <span class="material-symbols-outlined text-slate-500" data-icon="chevron_left">chevron_left</span>
@@ -374,67 +286,6 @@ Logout
 </button>
 </div>
 </div>
-</div>
-<!-- Secondary Context Section (Asymmetric Layout) -->
-<div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
-<!-- Shortage Map Widget -->
-<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-[0_12px_40px_rgba(17,28,44,0.06)] overflow-hidden relative min-h-[350px]">
-<div class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur p-4 rounded-lg shadow-lg border-l-4 border-error">
-<h4 class="text-sm font-bold text-on-surface">Critical Supply Gaps</h4>
-<p class="text-xs text-on-surface-variant">8 Sectors requiring immediate replenishment.</p>
-</div>
-<div class="w-full h-full bg-slate-200 flex items-center justify-center">
-<!-- Simulated Map View -->
-<div class="relative w-full h-full">
-<img alt="Map View" class="w-full h-full object-cover opacity-50 grayscale" data-alt="a high contrast satellite map view showing coastal urban infrastructure with subtle glowing red markers on certain buildings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHj-sNLiD6cK35X5QJZcgne9_ADTcZBjg5fB_wNOfsMUdGi4YCTczWrPXoNzXRIPCQtw-O31fG_Uw0-I8ilExPQaQLFHyqMFHtIhZjPCoT03LTYWjolH-MhP39Fwmlw0YjkO7ATc-VOFsCNpsqpnnyTSurYWITooHaGUwk0H3bELTlD4edtWi9DILsF1itZHsgEfZJbAo8MbUfonuP3kE1N91yHfvVrX-nrawrb1fThT_vUK_xEb60lr_DTJjRQC_9_k8arMCTmBCv"/>
-<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-<div class="w-12 h-12 bg-error/20 rounded-full animate-ping absolute"></div>
-<div class="w-4 h-4 bg-error rounded-full relative shadow-lg shadow-error/40 border-2 border-white"></div>
-</div>
-</div>
-</div>
-</div>
-<!-- Recent Activity Feed -->
-<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
-<h4 class="text-lg font-bold mb-6 flex items-center gap-2">
-<span class="material-symbols-outlined text-slate-400" data-icon="bolt">bolt</span>
-                        Recent Activity
-                    </h4>
-<ul class="space-y-6">
-<li class="flex gap-4">
-<div class="flex-shrink-0 w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container text-sm" data-icon="check_circle">check_circle</span>
-</div>
-<div>
-<p class="text-sm font-bold text-on-surface">New Dispatch Created</p>
-<p class="text-xs text-on-surface-variant">Medical supplies sent to Camp Alpha.</p>
-<p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">12:45 PM</p>
-</div>
-</li>
-<li class="flex gap-4">
-<div class="flex-shrink-0 w-8 h-8 rounded-full bg-error-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-error-container text-sm" data-icon="warning">warning</span>
-</div>
-<div>
-<p class="text-sm font-bold text-on-surface">Stock Alert: Water</p>
-<p class="text-xs text-on-surface-variant">Camp Bravo reporting &lt; 15% reserves.</p>
-<p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">11:30 AM</p>
-</div>
-</li>
-<li class="flex gap-4">
-<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-primary-container text-sm" data-icon="person">person</span>
-</div>
-<div>
-<p class="text-sm font-bold text-on-surface">Role Updated</p>
-<p class="text-xs text-on-surface-variant">Aarav Mishra promoted to Level 4 access.</p>
-<p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">Yesterday</p>
-</div>
-</li>
-</ul>
-<button class="w-full mt-8 py-2 text-primary font-bold text-xs uppercase tracking-widest hover:bg-surface-container-low rounded-lg transition-colors">
-                        View Full Log
-                    </button>
 </div>
 </div>
 </main>
@@ -459,6 +310,192 @@ if (role !== "admin") {
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
+}
+
+// 📊 Load live dashboard counts from backend
+async function loadDashboardData() {
+    try {
+        const response = await fetch("/dashboard");
+        if (!response.ok) {
+            throw new Error("Failed to load dashboard data");
+        }
+        const data = await response.json();
+        document.getElementById("totalCampsCount").textContent = data.totalCamps;
+        document.getElementById("totalInventoryCount").textContent = `${data.totalInventory.toLocaleString()} units`;
+        document.getElementById("activeRequestsCount").textContent = data.totalRequests;
+        document.getElementById("shortageCount").textContent = data.shortageCount;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+let currentTableMode = 'resources';
+
+const tableModeButtons = {
+    resources: document.getElementById('tableModeResources'),
+    requests: document.getElementById('tableModeRequests'),
+    inventory: document.getElementById('tableModeInventory'),
+};
+
+function setTableMode(mode) {
+    currentTableMode = mode;
+    updateTableModeButtons();
+    updateTableHead();
+    loadTableData();
+}
+
+loadDashboardData();
+setTableMode('resources');
+
+function updateTableModeButtons() {
+    Object.entries(tableModeButtons).forEach(([mode, button]) => {
+        if (mode === currentTableMode) {
+            button.classList.add('bg-primary', 'text-on-primary');
+            button.classList.remove('text-slate-600');
+        } else {
+            button.classList.remove('bg-primary', 'text-on-primary');
+            button.classList.add('text-slate-600');
+        }
+    });
+}
+
+function updateTableHead() {
+    const header = document.getElementById('dashboardTableHead');
+    if (!header) return;
+
+    if (currentTableMode === 'resources') {
+        header.innerHTML = `
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Resource</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Unit</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Available</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500"></th>
+        `;
+    } else if (currentTableMode === 'requests') {
+        header.innerHTML = `
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Request ID</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Resource</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Camp</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Qty Required</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+        `;
+    } else if (currentTableMode === 'inventory') {
+        header.innerHTML = `
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Inventory</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Resource</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Available</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Min Threshold</th>
+            <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+        `;
+    }
+}
+
+async function loadTableData() {
+    try {
+        const endpoint = currentTableMode === 'resources' ? '/resources' : currentTableMode === 'requests' ? '/requests' : '/inventory-stock';
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error(`Failed to load ${currentTableMode}`);
+        }
+
+        const data = await response.json();
+        const tbody = document.getElementById('resourceTableBody');
+        const summary = document.getElementById('tableSummary');
+
+        tbody.innerHTML = '';
+
+        if (!data.length) {
+            tbody.innerHTML = `<tr class="hover:bg-surface-bright transition-colors group"><td class="px-8 py-5 text-slate-500" colspan="5">No ${currentTableMode} data found.</td></tr>`;
+            summary.textContent = `Showing 0 ${currentTableMode}`;
+            return;
+        }
+
+        if (currentTableMode === 'resources') {
+            data.forEach((resource) => {
+                const status = resource.total_available <= 5 ? 'Low stock' : 'In stock';
+                const statusClass = resource.total_available <= 5 ? 'bg-error/10 text-error' : 'bg-secondary-container text-secondary';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-surface-bright transition-colors group">
+                        <td class="px-8 py-5">
+                            <div>
+                                <p class="font-bold text-on-surface">${resource.resource_name}</p>
+                                <p class="text-xs text-on-surface-variant">ID ${resource.resource_id}</p>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-medium text-on-surface">${resource.unit}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-bold text-on-surface">${resource.total_available.toLocaleString()}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold ${statusClass}">${status}</span>
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <button class="opacity-0 group-hover:opacity-100 p-2 hover:bg-slate-100 rounded-lg transition-all">
+                                <span class="material-symbols-outlined text-slate-400">more_vert</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            summary.textContent = `Showing ${data.length} resources`;
+        } else if (currentTableMode === 'requests') {
+            data.forEach((request) => {
+                const statusClass = request.status === 'COMPLETED' ? 'bg-secondary-container text-secondary' : request.status === 'PARTIAL' ? 'bg-warning/10 text-warning' : 'bg-error/10 text-error';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-surface-bright transition-colors group">
+                        <td class="px-8 py-5">
+                            <span class="font-bold text-on-surface">#${request.request_id}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="font-sm text-on-surface font-medium">${request.resource_name || 'Unknown'}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-medium text-on-surface">${request.camp_name || 'Unknown'}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-bold text-on-surface">${request.quantity_required}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold ${statusClass}">${request.status}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+            summary.textContent = `Showing ${data.length} requests`;
+        } else if (currentTableMode === 'inventory') {
+            data.forEach((stock) => {
+                const status = stock.quantity_available < stock.minimum_threshold ? 'Below threshold' : 'Normal';
+                const statusClass = stock.quantity_available < stock.minimum_threshold ? 'bg-error/10 text-error' : 'bg-secondary-container text-secondary';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-surface-bright transition-colors group">
+                        <td class="px-8 py-5">
+                            <div>
+                                <p class="font-bold text-on-surface">${stock.inventory_name}</p>
+                                <p class="text-xs text-on-surface-variant">${stock.location || 'Unknown'}</p>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-medium text-on-surface">${stock.resource_name || 'Unknown'}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-bold text-on-surface">${stock.quantity_available.toLocaleString()}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="text-sm font-medium text-on-surface">${stock.minimum_threshold.toLocaleString()}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold ${statusClass}">${status}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+            summary.textContent = `Showing ${data.length} inventory rows`;
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 </script>
 </body></html>
