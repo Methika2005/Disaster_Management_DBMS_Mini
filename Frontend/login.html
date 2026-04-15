@@ -120,32 +120,26 @@
 <h1 class="text-2xl font-extrabold tracking-tight text-primary">Equilibrium Relief</h1>
 <p class="text-on-surface-variant text-sm mt-2 font-medium">Resource Management Command Center</p>
 </div>
-<!-- Role Selection (The Stoic Orchestrator Approach) -->
+<!-- Role Selection (Dropdown) -->
 <div class="px-8 pb-4">
-<div class="bg-surface-container-low p-1 rounded-lg flex gap-1">
-<button class="flex-1 py-2 text-xs font-semibold rounded-md bg-white text-primary shadow-sm transition-all">
-                        Admin
-                    </button>
-<button class="flex-1 py-2 text-xs font-medium rounded-md text-on-surface-variant hover:bg-surface-container transition-all">
-                        Inventory
-                    </button>
-<button class="flex-1 py-2 text-xs font-medium rounded-md text-on-surface-variant hover:bg-surface-container transition-all">
-                        Camp
-                    </button>
-<button class="flex-1 py-2 text-xs font-medium rounded-md text-on-surface-variant hover:bg-surface-container transition-all">
-                        Supplier
-                    </button>
-</div>
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1 block mb-2">Select Your Role</label>
+<select id="roleSelect" class="w-full py-3 px-4 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-high transition-all outline-none text-on-surface">
+<option value="">-- Choose Role --</option>
+<option value="Admin">Admin</option>
+<option value="Inventory Manager">Inventory Manager</option>
+<option value="Camp Manager">Camp Manager</option>
+<option value="Supplier">Supplier</option>
+</select>
 </div>
 <!-- Credentials Form -->
-<form class="px-8 pb-10 space-y-5">
+<form id="loginForm" class="px-8 pb-10 space-y-5">
 <div class="space-y-1.5">
 <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant px-1" for="email">Email Address</label>
 <div class="relative group">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors">
                             alternate_email
                         </span>
-<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-high transition-all outline-none text-on-surface placeholder:text-outline" id="email" placeholder="name@equilibrium.org" type="email"/>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-high transition-all outline-none text-on-surface placeholder:text-outline" id="email" placeholder="name@equilibrium.org" type="email" required/>
 </div>
 </div>
 <div class="space-y-1.5">
@@ -154,22 +148,15 @@
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors">
                             lock
                         </span>
-<input class="w-full pl-10 pr-12 py-3 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-high transition-all outline-none text-on-surface placeholder:text-outline" id="password" placeholder="••••••••" type="password"/>
+<input class="w-full pl-10 pr-12 py-3 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-high transition-all outline-none text-on-surface placeholder:text-outline" id="password" placeholder="••••••••" type="password" required/>
 <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-primary transition-colors" type="button">
 <span class="material-symbols-outlined text-sm">visibility</span>
 </button>
 </div>
 </div>
-<div class="flex items-center justify-between py-1">
-<label class="flex items-center gap-2 cursor-pointer group">
-<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
-<span class="text-xs font-medium text-on-surface-variant group-hover:text-on-surface">Remember me</span>
-</label>
-<a class="text-xs font-semibold text-primary hover:text-primary-container transition-colors" href="#">Forgot Password?</a>
-</div>
 <p id="errorMsg" class="text-red-500 text-sm text-center hidden"></p>
-<button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
-                    Sign In to Dashboard
+<button id="submitBtn" class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                    Login to Dashboard
                     <span class="material-symbols-outlined text-lg">arrow_forward</span>
 </button>
 </form>
@@ -203,48 +190,69 @@
 <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Global Network Online</span>
 </div>
 <script>
-document.querySelector("form").addEventListener("submit", function(e) {
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    let role = "";
-
-    // Hardcoded users (for demo)
-    if (email === "admin@sys.com" && password === "123") {
-        role = "admin";
-        window.location.href = "admin.html";
-    } 
-    else if (email === "inventory@sys.com" && password === "123") {
-        role = "inventory";
-        window.location.href = "inventory_manager.html";
-    } 
-    else if (email === "camp@sys.com" && password === "123") {
-        role = "camp";
-        window.location.href = "camp_manager.html";
-    } 
-    else if (email === "supplier@sys.com" && password === "123") {
-        role = "supplier";
-        window.location.href = "supplier.html";
-    } 
-    else {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const role = document.getElementById("roleSelect").value;
     const errorMsg = document.getElementById("errorMsg");
-    errorMsg.textContent = "Invalid email or password";
-    errorMsg.classList.remove("hidden");
-    return;
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Validate role selection
+    if (!role) {
+        errorMsg.textContent = "Please select a role";
+        errorMsg.classList.remove("hidden");
+        return;
     }
 
-    // Store login state
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("role", role);
-
-    document.getElementById("email").addEventListener("input", clearError);
-    document.getElementById("password").addEventListener("input", clearError);
-
-    function clearError() {
-        document.getElementById("errorMsg").classList.add("hidden");
+    // Validate email and password
+    if (!email || !password) {
+        errorMsg.textContent = "Please enter email and password";
+        errorMsg.classList.remove("hidden");
+        return;
     }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="animate-spin material-symbols-outlined">loading</span> Authenticating...';
+
+    try {
+        const response = await fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password, role })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Store login info in localStorage
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userRole", role);
+            localStorage.setItem("userEmail", email);
+
+            // Redirect based on role
+            window.location.href = data.redirect;
+        } else {
+            errorMsg.textContent = data.message || "Login failed";
+            errorMsg.classList.remove("hidden");
+        }
+    } catch (err) {
+        errorMsg.textContent = "Error: Unable to connect to server";
+        errorMsg.classList.remove("hidden");
+        console.error(err);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Login to Dashboard<span class="material-symbols-outlined text-lg">arrow_forward</span>';
+    }
+
+    // Clear error on input
+    document.getElementById("email").addEventListener("input", function() {
+        errorMsg.classList.add("hidden");
+    });
+    document.getElementById("password").addEventListener("input", function() {
+        errorMsg.classList.add("hidden");
+    });
 });
 </script>
 </body></html>

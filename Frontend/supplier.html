@@ -1,394 +1,350 @@
 <!DOCTYPE html>
-
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tactical Calm | Supplier Dashboard</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-tertiary": "#ffffff",
-                    "on-surface-variant": "#43474f",
-                    "tertiary": "#543300",
-                    "tertiary-container": "#734700",
-                    "on-background": "#111c2c",
-                    "primary-fixed-dim": "#a5c8ff",
-                    "inverse-on-surface": "#ebf1ff",
-                    "outline": "#737780",
-                    "primary": "#0e3b69",
-                    "error": "#ba1a1a",
-                    "secondary-fixed-dim": "#93d4af",
-                    "inverse-primary": "#a5c8ff",
-                    "on-tertiary-fixed": "#2a1700",
-                    "surface-variant": "#d8e3fa",
-                    "surface-dim": "#cfdaf1",
-                    "secondary-container": "#aff1ca",
-                    "on-tertiary-fixed-variant": "#653e00",
-                    "on-error-container": "#93000a",
-                    "primary-fixed": "#d4e3ff",
-                    "on-error": "#ffffff",
-                    "on-primary": "#ffffff",
-                    "primary-container": "#2c5282",
-                    "surface-bright": "#f9f9ff",
-                    "tertiary-fixed": "#ffddb8",
-                    "inverse-surface": "#263142",
-                    "surface-container-high": "#dee8ff",
-                    "error-container": "#ffdad6",
-                    "on-secondary-container": "#317051",
-                    "surface": "#f9f9ff",
-                    "surface-tint": "#3b6090",
-                    "on-secondary-fixed-variant": "#0a5135",
-                    "surface-container-highest": "#d8e3fa",
-                    "on-secondary-fixed": "#002112",
-                    "background": "#f9f9ff",
-                    "on-primary-fixed": "#001c3a",
-                    "on-surface": "#111c2c",
-                    "surface-container": "#e7eeff",
-                    "surface-container-lowest": "#ffffff",
-                    "secondary-fixed": "#aff1ca",
-                    "secondary": "#2a6a4b",
-                    "on-secondary": "#ffffff",
-                    "tertiary-fixed-dim": "#ffb95f",
-                    "on-tertiary-container": "#feb557",
-                    "on-primary-fixed-variant": "#204877",
-                    "on-primary-container": "#a2c6fd",
-                    "outline-variant": "#c3c6d0",
-                    "surface-container-low": "#f0f3ff"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Supplier - Add Supply</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#0e3b69",
+                        "secondary": "#2a6a4b",
+                        "error": "#ba1a1a",
+                        "on-surface": "#111c2c",
+                        "on-surface-variant": "#43474f",
+                        "surface": "#f9f9ff"
+                    }
+                }
             }
-          },
-        },
-      }
+        }
     </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .headline-md { font-size: 1.75rem; line-height: 2.25rem; }
-        .body-md { font-size: 0.875rem; line-height: 1.25rem; }
-        .label-sm { font-size: 0.6875rem; line-height: 1rem; }
-        .display-sm { font-size: 2.25rem; line-height: 2.75rem; }
-        .title-md { font-size: 1.125rem; line-height: 1.5rem; }
-        
-        /* Glassmorphism utility */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400; }
     </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
-<body class="bg-background font-body text-on-surface">
-<!-- Sidebar (NavigationDrawer) -->
-<aside class="hidden lg:flex flex-col fixed left-0 top-0 h-full overflow-y-auto bg-slate-100 dark:bg-slate-950 h-screen w-64 border-r-0 z-40">
-<div class="px-6 py-8">
-<div class="flex items-center gap-3 mb-10">
-<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-primary-container">shield_person</span>
-</div>
-<span class="text-lg font-headline font-bold text-blue-900 dark:text-blue-50">Tactical Calm</span>
-</div>
-<div class="flex items-center gap-3 mb-8 p-3 rounded-xl bg-surface-container-low">
-<div class="w-10 h-10 rounded-full bg-slate-300 overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="Professional portrait of a male logistics coordinator in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjAo6S3lMo7mf34oDPjzoYYZ-xasLCw1-A8hcNhf0D4DhStZvP25wCNaQjub4Vz7acfzveUFI9BLJeI9gzu8cXc-KgSbzBZ0foU7rqiHmlqdXrwQR10A9LsdkD0mekIyLUAa6CrsBD1qZjyBBhxRIaJbcnMdzGq7xkZ7mcgSR0z5lWc3YFQOgKSZjJfza0aHkEavUMqkkYDrcSZ1mHcCdQ1okoVW0KB0U4iEzDQlMpx4zt7e5Fk8I48pPATgQEYoALNB_g2QAcg8cK"/>
-</div>
-<div>
-<h3 class="font-bold text-on-surface text-sm">Lead Coordinator</h3>
-<p class="text-xs text-on-surface-variant">Admin</p>
-</div>
-</div>
-<nav class="space-y-1">
-<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="group">group</span>
-<span class="font-medium text-sm">Users</span>
-</a>
-<a class="border-l-4 border-blue-900 dark:border-blue-400 bg-white dark:bg-slate-900 text-blue-900 dark:text-blue-50 py-3 px-4 flex items-center gap-3" href="#">
-<span class="material-symbols-outlined" data-icon="description">description</span>
-<span class="font-medium text-sm">Requests</span>
-</a>
-<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="history">history</span>
-<span class="font-medium text-sm">History</span>
-</a>
-<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-<span class="font-medium text-sm">Resources</span>
-</a>
-<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
-<span class="font-medium text-sm">Stock</span>
-</a>
-<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
-<span class="font-medium text-sm">Dispatch</span>
-</a>
-</nav>
-</div>
-</aside>
-<!-- Main Content Area -->
-<main class="lg:ml-64 min-h-screen">
-<!-- TopAppBar -->
-<header class="flex justify-between items-center w-full px-6 py-3 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm dark:shadow-none">
-<div class="flex items-center gap-4">
-<button class="lg:hidden p-2 rounded-full hover:bg-slate-200/50 transition-colors">
-<span class="material-symbols-outlined text-blue-900" data-icon="menu">menu</span>
-</button>
-<h1 class="font-headline headline-md font-bold text-blue-900 dark:text-blue-50">Supply Management</h1>
-</div>
-<div class="flex items-center gap-4">
-<button class="p-2 rounded-full hover:bg-slate-200/50 transition-colors">
-<span class="material-symbols-outlined text-slate-500" data-icon="notifications">notifications</span>
-</button>
-<!-- ✅ ADD LOGOUT BUTTON HERE -->
-<button onclick="logout()" 
-class="bg-red-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-600 transition-all">
-Logout
-</button>
-<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden ring-2 ring-surface-container">
-<img class="w-full h-full object-cover" data-alt="Close-up avatar of a professional male administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB974Exq6HrH1Y5H6kjbHb3pBNp_FKd5N2RZcvf1lfeUsKL45lQrKYFgqLgewJ8xBP7YDwq15nwWIbkOGHNQGpb8ZSUExTUojU0Joqo8gNw5gzWLxIy0e2ldBEYA_LKIMuHOjOik0Ees_13JYlnJQXE3jqjuYJiNoA1_Xm5YcIQutlN70mn-Hzfut2yYGz74hsGAbxr7We_aVU9jjXgomuXsVwLRgvVJAin5iRYSTirPeeNXkWRLqI8QW5PhsXQZZsVDtzvFsbWaSv_"/>
-</div>
-</div>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Header -->
+<header class="bg-slate-50 shadow-sm sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-extrabold text-primary">Equilibrium Relief</h1>
+        <span class="text-sm text-on-surface-variant">Supplier</span>
+    </div>
+    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined">logout</span>Logout
+    </button>
 </header>
-<div class="p-6 space-y-8">
-<!-- KPI Cards Section (Bento Grid) -->
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<!-- Card 1 -->
-<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
-<div class="relative z-10">
-<p class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Pending Supply Requests</p>
-<h2 id="pendingSupplyRequestsCount" class="display-sm font-headline font-extrabold text-primary">0</h2>
-<div class="mt-4 flex items-center gap-2 text-error text-sm font-medium">
-<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
-<span>High Priority</span>
+
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 bg-slate-100 border-r border-slate-200 p-6 overflow-y-auto">
+        <div class="mb-8">
+            <h2 class="text-lg font-bold text-primary">Supply Management</h2>
+            <p class="text-xs text-on-surface-variant">Add Resources</p>
+        </div>
+        
+        <nav class="space-y-2 flex-1">
+            <a href="supplier.html" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium">
+                <span class="material-symbols-outlined">local_shipping</span>Add Supply
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>Dashboard
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
+                <span class="material-symbols-outlined">inventory_2</span>Inventory
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
+                <span class="material-symbols-outlined">receipt_long</span>Requests
+            </a>
+        </nav>
+
+        <div class="border-t border-slate-200 pt-4">
+            <p class="text-xs text-on-surface-variant text-center">Disaster Relief System v1.0</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto">
+        <div class="p-8 max-w-6xl mx-auto">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h2 class="text-3xl font-extrabold text-on-surface mb-2">Supply Management</h2>
+                <p class="text-on-surface-variant">Add supplies to central inventory and view supply history</p>
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left Column: Add Supply Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">add_circle</span>Add Supply
+                        </h3>
+
+                        <form id="addSupplyForm" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Supplier Name</label>
+                                <select id="supplierSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">-- Choose Supplier --</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Central Inventory</label>
+                                <select id="inventorySelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">-- Choose Inventory --</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Resource</label>
+                                <select id="resourceSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">-- Choose Resource --</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity</label>
+                                <input id="quantityInput" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity"/>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Supply Date</label>
+                                <input id="supplyDateInput" type="date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"/>
+                            </div>
+
+                            <button type="submit" class="w-full py-2 bg-secondary text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-lg">send</span>Add Supply
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Column: Supply History Table -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-200">
+                            <h3 class="text-lg font-bold text-on-surface">Supply History</h3>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-slate-50 border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supply ID</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplier</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Warehouse</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="supplyTableBody" class="divide-y divide-slate-200">
+                                    <!-- Rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="emptyState" class="text-center py-12 hidden">
+                            <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
+                            <p class="text-on-surface-variant text-lg">No supplies yet</p>
+                            <p class="text-on-surface-variant text-sm">Use the form to add your first supply</p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                            <span id="tableCount">Showing 0 supplies</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
-</div>
-<div class="absolute right-[-10px] bottom-[-10px] opacity-10 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-9xl text-primary" data-icon="assignment_late">assignment_late</span>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
-<div class="relative z-10">
-<p class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Active Shipments</p>
-<h2 id="activeShipmentsCount" class="display-sm font-headline font-extrabold text-primary">0</h2>
-<div class="mt-4 flex items-center gap-2 text-secondary text-sm font-medium">
-<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
-<span>On Track</span>
-</div>
-</div>
-<div class="absolute right-[-10px] bottom-[-10px] opacity-10 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-9xl text-primary" data-icon="local_shipping">local_shipping</span>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group shadow-[0_12px_40px_rgba(17,28,44,0.06)]">
-<div class="relative z-10">
-<p class="label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Delivered Total</p>
-<h2 id="deliveredTotalCount" class="display-sm font-headline font-extrabold text-primary">0</h2>
-<div class="mt-4 flex items-center gap-2 text-on-surface-variant text-sm font-medium">
-<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
-<span>Last 30 Days</span>
-</div>
-</div>
-<div class="absolute right-[-10px] bottom-[-10px] opacity-10 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-9xl text-primary" data-icon="inventory">inventory</span>
-</div>
-</div>
-</section>
-<!-- Main Content Area: Supply Requests & History -->
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-<!-- Supply Requests (Main View) -->
-<section class="xl:col-span-2 space-y-6">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-3">
-<h2 class="title-md font-bold text-on-surface">Supply Requests</h2>
-<span id="newRequestsBadge" class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded-full text-xs font-bold">0 NEW</span>
-</div>
-<button class="bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-medium shadow-sm hover:opacity-90 transition-opacity">
-<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
-<span>Add Supply Entry</span>
-</button>
-</div>
-<div id="supplierRequestsContainer" class="space-y-4">
-<!-- Supply cards will load here -->
-</div>
-</section>
-<!-- Past Deliveries (History View) -->
-<section class="space-y-6">
-<div class="flex items-center justify-between">
-<h2 class="title-md font-bold text-on-surface">Past Deliveries</h2>
-<a class="text-primary text-xs font-bold hover:underline" href="#">View All</a>
-</div>
-<div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
-<div class="p-2 space-y-1">
-<div id="deliveryHistoryContainer" class="p-2 space-y-1">
-<!-- Delivery history will load here -->
-</div>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- Bottom Navigation Bar (Mobile only) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-white/20 px-6 py-3 flex justify-around items-center z-50">
-<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span class="text-[10px] font-bold uppercase tracking-wider">Home</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-blue-900 font-bold" href="#">
-<span class="material-symbols-outlined" data-icon="description">description</span>
-<span class="text-[10px] font-bold uppercase tracking-wider">Requests</span>
-</a>
-<button class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center -mt-8 shadow-lg ring-4 ring-background">
-<span class="material-symbols-outlined" data-icon="add">add</span>
-</button>
-<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
-<span class="material-symbols-outlined" data-icon="history">history</span>
-<span class="text-[10px] font-bold uppercase tracking-wider">History</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-<span class="text-[10px] font-bold uppercase tracking-wider">Profile</span>
-</a>
-</nav>
+
 <script>
+// ===== PAGE PROTECTION =====
 const isLoggedIn = localStorage.getItem("isLoggedIn");
-const role = localStorage.getItem("role");
+const userRole = localStorage.getItem("userRole");
 
-if (isLoggedIn !== "true") {
-    window.location.href = "login.html";
-}
-
-if (role !== "supplier" && role !== "admin") {
+if (isLoggedIn !== "true" || userRole !== "Supplier") {
     alert("Access Denied!");
     window.location.href = "login.html";
 }
 
+// ===== LOGOUT =====
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
 
-async function loadSupplierDashboard() {
+// ===== SET TODAY'S DATE AS DEFAULT =====
+document.addEventListener("DOMContentLoaded", function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("supplyDateInput").value = today;
+});
+
+// ===== LOAD SUPPLIERS =====
+async function loadSuppliers() {
     try {
-        const response = await fetch('/supplier-dashboard');
+        const response = await fetch("http://localhost:5000/suppliers");
+        const data = await response.json();
+
+        if (data.success && data.suppliers) {
+            const select = document.getElementById("supplierSelect");
+            data.suppliers.forEach((supplier) => {
+                const option = document.createElement("option");
+                option.value = supplier.supplier_id;
+                option.textContent = supplier.supplier_name;
+                select.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error("Error loading suppliers:", err);
+    }
+}
+
+// ===== LOAD INVENTORIES =====
+async function loadInventories() {
+    try {
+        const response = await fetch("http://localhost:5000/inventories");
+        const data = await response.json();
+
+        if (data.success && data.inventories) {
+            const select = document.getElementById("inventorySelect");
+            data.inventories.forEach((inventory) => {
+                const option = document.createElement("option");
+                option.value = inventory.inventory_id;
+                option.textContent = `${inventory.name} (${inventory.location || 'N/A'})`;
+                select.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error("Error loading inventories:", err);
+    }
+}
+
+// ===== LOAD RESOURCES =====
+async function loadResources() {
+    try {
+        const response = await fetch("http://localhost:5000/resources-list");
+        const data = await response.json();
+
+        if (data.success && data.resources) {
+            const select = document.getElementById("resourceSelect");
+            data.resources.forEach((resource) => {
+                const option = document.createElement("option");
+                option.value = resource.resource_id;
+                option.textContent = `${resource.resource_name} (${resource.unit})`;
+                select.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error("Error loading resources:", err);
+    }
+}
+
+// ===== LOAD SUPPLY HISTORY =====
+async function loadSupplyHistory() {
+    const tbody = document.getElementById("supplyTableBody");
+    const emptyState = document.getElementById("emptyState");
+    const tableCount = document.getElementById("tableCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/supply");
+        const data = await response.json();
+
+        if (!data.success || !data.supplies || data.supplies.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            tableCount.textContent = "Showing 0 supplies";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.supplies.forEach((supply) => {
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${supply.supply_id}</td>
+                    <td class="px-6 py-4">${supply.supplier_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${supply.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${supply.quantity_supplied}</td>
+                    <td class="px-6 py-4">${supply.inventory_name || 'N/A'}</td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(supply.supply_date).toLocaleDateString()}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        tableCount.textContent = `Showing ${data.supplies.length} suppl${data.supplies.length !== 1 ? 'ies' : 'y'}`;
+
+    } catch (err) {
+        console.error("Error loading supply history:", err);
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
+    }
+}
+
+// ===== ADD SUPPLY FORM =====
+document.getElementById("addSupplyForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const supplierId = document.getElementById("supplierSelect").value;
+    const inventoryId = document.getElementById("inventorySelect").value;
+    const resourceId = document.getElementById("resourceSelect").value;
+    const quantity = document.getElementById("quantityInput").value;
+    const supplyDate = document.getElementById("supplyDateInput").value;
+
+    if (!supplierId || !inventoryId || !resourceId || !quantity) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/supply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                supplierId: parseInt(supplierId),
+                inventoryId: parseInt(inventoryId),
+                resourceId: parseInt(resourceId),
+                quantitySupplied: parseInt(quantity),
+                supplyDate: supplyDate
+            })
+        });
+
         const data = await response.json();
         if (data.success) {
-            document.getElementById('pendingSupplyRequestsCount').textContent = data.pendingSupplyRequests.toLocaleString();
-            document.getElementById('activeShipmentsCount').textContent = data.activeShipments.toLocaleString();
-            document.getElementById('deliveredTotalCount').textContent = data.deliveredTotal.toLocaleString();
-            document.getElementById('newRequestsBadge').textContent = `${data.pendingSupplyRequests} NEW`;
-        }
-    } catch (error) {
-        console.error('Error loading supplier dashboard:', error);
-    }
-}
-
-async function loadSupplierRequests() {
-    try {
-        const response = await fetch('/supplier-requests');
-        const data = await response.json();
-        const container = document.getElementById('supplierRequestsContainer');
-
-        if (data.success && data.requests.length > 0) {
-            container.innerHTML = data.requests.map(request => {
-                const date = request.supply_date ? new Date(request.supply_date).toLocaleDateString() : 'TBD';
-                const statusLabel = request.status ? request.status.toUpperCase() : 'PENDING';
-                const statusClass = statusLabel.includes('PENDING') ? 'bg-error-container text-on-error-container' : 'bg-secondary-container text-on-secondary-container';
-                const resourceName = request.resource_name || 'Resource';
-                const campName = request.camp_name || 'Unknown Camp';
-                const quantityText = request.quantity_supplied ? `${request.quantity_supplied} units` : 'Qty unavailable';
-
-                return `
-                    <div class="bg-surface-container-lowest rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-surface-container-low transition-colors">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-primary">local_shipping</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-on-surface">${resourceName}</h4>
-                                <p class="text-sm text-on-surface-variant">Req ID: #${request.supply_id || 'N/A'} • ${campName}</p>
-                                <div class="flex flex-wrap gap-2 mt-2">
-                                    <span class="px-2 py-0.5 rounded-full ${statusClass} text-[10px] font-bold uppercase tracking-tighter">${statusLabel}</span>
-                                    <span class="text-xs text-on-surface-variant font-medium">${quantityText}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 self-end md:self-center">
-                            <button class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors">Details</button>
-                            <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-primary-container transition-colors">Accept</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            alert("Supply added successfully!");
+            document.getElementById("addSupplyForm").reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("supplyDateInput").value = today;
+            loadSupplyHistory();
         } else {
-            container.innerHTML = '<div class="rounded-xl p-6 bg-surface-container-low text-slate-500">No upcoming supplier requests found.</div>';
+            alert("Error: " + data.message);
         }
-    } catch (error) {
-        console.error('Error loading supplier requests:', error);
+    } catch (err) {
+        alert("Error adding supply");
+        console.error(err);
     }
-}
+});
 
-async function loadDeliveryHistory() {
-    try {
-        const response = await fetch('/supplier-deliveries');
-        const data = await response.json();
-        const container = document.getElementById('deliveryHistoryContainer');
-
-        if (data.success && data.deliveries.length > 0) {
-            container.innerHTML = data.deliveries.map(delivery => {
-                const dateText = delivery.fulfillment_date ? new Date(delivery.fulfillment_date).toLocaleDateString() : 'Unknown date';
-                const title = delivery.resource_name || 'Delivered Item';
-                const campName = delivery.camp_name || 'Destination';
-                return `
-                    <div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
-                        <div class="w-2 h-10 rounded-full bg-secondary"></div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h5 class="text-sm font-bold">${title}</h5>
-                                <span class="bg-secondary-container text-on-secondary-container label-sm px-2 py-0.5 rounded-full font-bold">Delivered</span>
-                            </div>
-                            <p class="text-[11px] text-on-surface-variant mt-1">${campName} • ${dateText}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        } else {
-            container.innerHTML = '<div class="rounded-xl p-4 bg-surface-container-low text-slate-500">No delivery history available.</div>';
-        }
-    } catch (error) {
-        console.error('Error loading delivery history:', error);
-    }
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    loadSupplierDashboard();
-    loadSupplierRequests();
-    loadDeliveryHistory();
+// Load on page load
+window.addEventListener("load", () => {
+    loadSuppliers();
+    loadInventories();
+    loadResources();
+    loadSupplyHistory();
 });
 </script>
-</body></html>
+</body>
+</html>

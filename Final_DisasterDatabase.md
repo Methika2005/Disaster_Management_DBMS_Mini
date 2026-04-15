@@ -794,4 +794,123 @@ mysql> select \* from supplier;
 
 
 
-mysql>
+\-------------------------------------------------------------------------------------------------
+
+mysql> desc disaster;
+
++----------------+----------------------------------------+------+-----+-------------------+-------------------+
+
+| Field          | Type                                   | Null | Key | Default           | Extra             |
+
++----------------+----------------------------------------+------+-----+-------------------+-------------------+
+
+| disaster\_id    | int                                    | NO   | PRI | NULL              | auto\_increment    |
+
+| disaster\_type  | varchar(50)                            | YES  |     | NULL              |                   |
+
+| severity\_level | enum('LOW','MEDIUM','HIGH','CRITICAL') | YES  |     | NULL              |                   |
+
+| start\_date     | date                                   | YES  |     | NULL              |                   |
+
+| created\_at     | timestamp                              | YES  |     | CURRENT\_TIMESTAMP | DEFAULT\_GENERATED |
+
++----------------+----------------------------------------+------+-----+-------------------+-------------------+
+
+5 rows in set (0.03 sec)
+
+
+
+mysql> INSERT INTO disaster (disaster\_type, severity\_level, start\_date) values ('Flood', 'HIGH', '2026-04-01');
+
+Query OK, 1 row affected (0.03 sec)
+
+
+
+mysql> select \* from disaster;
+
++-------------+---------------+----------------+------------+---------------------+
+
+| disaster\_id | disaster\_type | severity\_level | start\_date | created\_at          |
+
++-------------+---------------+----------------+------------+---------------------+
+
+|           1 | Flood         | HIGH           | 2026-04-01 | 2026-04-15 15:40:32 |
+
++-------------+---------------+----------------+------------+---------------------+
+
+1 row in set (0.00 sec)
+
+mysql> desc affected\_area;
+
++---------------------+-----------------------------+------+-----+-------------------+-------------------+
+
+| Field               | Type                        | Null | Key | Default           | Extra             |
+
++---------------------+-----------------------------+------+-----+-------------------+-------------------+
+
+| area\_id             | int                         | NO   | PRI | NULL              | auto\_increment    |
+
+| area\_name           | varchar(100)                | YES  |     | NULL              |                   |
+
+| population\_affected | int                         | YES  |     | NULL              |                   |
+
+| priority\_level      | enum('LOW','MEDIUM','HIGH') | YES  |     | NULL              |                   |
+
+| disaster\_id         | int                         | YES  | MUL | NULL              |                   |
+
+| created\_at          | timestamp                   | YES  |     | CURRENT\_TIMESTAMP | DEFAULT\_GENERATED |
+
++---------------------+-----------------------------+------+-----+-------------------+-------------------+
+
+6 rows in set (0.00 sec)
+
+
+
+mysql> INSERT INTO affected\_area (area\_name, population\_affected, priority\_level, disaster\_id) values ('Ambegoan', 1000, 'HIGH', 1);
+
+Query OK, 1 row affected (0.01 sec)
+
+mysql> desc relief\_camp;
+
++--------------+--------------+------+-----+-------------------+-------------------+
+
+| Field        | Type         | Null | Key | Default           | Extra             |
+
++--------------+--------------+------+-----+-------------------+-------------------+
+
+| camp\_id      | int          | NO   | PRI | NULL              | auto\_increment    |
+
+| name         | varchar(100) | YES  |     | NULL              |                   |
+
+| location     | varchar(100) | YES  |     | NULL              |                   |
+
+| capacity     | int          | YES  |     | NULL              |                   |
+
+| area\_id      | int          | YES  | MUL | NULL              |                   |
+
+| inventory\_id | int          | YES  | MUL | NULL              |                   |
+
+| created\_at   | timestamp    | YES  |     | CURRENT\_TIMESTAMP | DEFAULT\_GENERATED |
+
++--------------+--------------+------+-----+-------------------+-------------------+
+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO relief\_camp (name, location, capacity, area\_id, inventory\_id) values ('Ambegoan\_Flood', 'Ambegoan', 4000, 1, 1);
+
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select \* from relief\_camp;
+
++---------+----------------+----------+----------+---------+--------------+---------------------+
+
+| camp\_id | name           | location | capacity | area\_id | inventory\_id | created\_at          |
+
++---------+----------------+----------+----------+---------+--------------+---------------------+
+
+|       4 | Ambegoan\_Flood | Ambegoan |     4000 |       1 |            1 | 2026-04-15 15:56:46 |
+
++---------+----------------+----------+----------+---------+--------------+---------------------+
+
+1 row in set (0.00 sec)
+
