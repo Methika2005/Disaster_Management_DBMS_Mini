@@ -11,7 +11,7 @@ app.use(express.json());
 const db = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "root",
+    password: process.env.DB_PASSWORD || "Srushti@123",
     database: process.env.DB_NAME || "disaster_relief_db_final"
 });
 
@@ -24,6 +24,28 @@ db.connect((err) => {
 });
 
 const dbPromise = db.promise();
+
+async function ensureSupplyStatusColumn() {
+    try {
+        const databaseName = process.env.DB_NAME || "disaster_relief_db_final";
+        const [rows] = await dbPromise.query(
+            `SELECT COLUMN_NAME FROM information_schema.columns
+             WHERE table_schema = ? AND table_name = 'supply' AND column_name = 'status'`,
+            [databaseName]
+        );
+
+        if (rows.length === 0) {
+            console.log("Adding missing supply.status column...");
+            await dbPromise.query(
+                `ALTER TABLE supply ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'PENDING'`
+            );
+        }
+    } catch (err) {
+        console.error("Error ensuring supply.status column:", err.message);
+    }
+}
+
+ensureSupplyStatusColumn();
 
 // Serve frontend files
 app.use(express.static(path.join(__dirname, "../Frontend")));
@@ -100,36 +122,6 @@ app.get("/resources-simple", async (req, res) => {
     }
 });
 
-app.get("/inventories", async (req, res) => {
-    try {
-        const [rows] = await dbPromise.query("SELECT * FROM central_inventory");
-        res.json(rows);
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
-app.get("/requests", async (req, res) => {
-    try {
-        const [rows] = await dbPromise.query(
-            `SELECT rr.request_id,
-                    rr.quantity_required,
-                    rr.priority_level,
-                    rr.status,
-                    rr.request_date,
-                    rc.name AS camp_name,
-                    r.resource_name
-             FROM resource_request rr
-             LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id
-             LEFT JOIN resource r ON rr.resource_id = r.resource_id
-             ORDER BY rr.request_date DESC`
-        );
-        res.json(rows);
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
 app.get("/inventory-stock", async (req, res) => {
     try {
         const [rows] = await dbPromise.query(
@@ -171,9 +163,9 @@ app.get("/inventory-dashboard", async (req, res) => {
 
 app.get("/supplier-dashboard", async (req, res) => {
     try {
-        const [pendingRequests] = await dbPromise.query("SELECT COUNT(*) AS pendingCount FROM supply WHERE supply_date >= CURDATE()");
-        const [activeShipments] = await dbPromise.query("SELECT COUNT(*) AS activeCount FROM supply WHERE supply_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)");
-        const [deliveredTotal] = await dbPromise.query("SELECT IFNULL(SUM(quantity_supplied), 0) AS deliveredTotal FROM request_fulfillment WHERE fulfillment_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)");
+        const [pendingRequests] = await dbPromise.query("SELECT COUNT(*) AS pendingCount FROM supply WHERE status = 'PENDING'");
+        const [activeShipments] = await dbPromise.query("SELECT COUNT(*) AS activeCount FROM supply WHERE status = 'PENDING' AND supply_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)");
+        const [deliveredTotal] = await dbPromise.query("SELECT IFNULL(SUM(quantity_supplied), 0) AS deliveredTotal FROM supply WHERE status = 'APPROVED'");
 
         res.json({
             success: true,
@@ -206,11 +198,13 @@ app.get("/supplier-requests", async (req, res) => {
     }
 });
 
-app.get("/supplier-deliveries", async (req, res) => {
+app.get("/supplier-fulfillments", async (req, res) => {
     try {
         const [rows] = await dbPromise.query(
             `SELECT rf.fulfillment_id,
+                    rf.request_id,
                     rf.quantity_supplied,
+                    rf.fulfillment_status,
                     rf.fulfillment_date,
                     r.resource_name,
                     rc.name AS camp_name
@@ -219,7 +213,7 @@ app.get("/supplier-deliveries", async (req, res) => {
              LEFT JOIN resource r ON rr.resource_id = r.resource_id
              LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id
              ORDER BY rf.fulfillment_date DESC
-             LIMIT 4`
+             LIMIT 10`
         );
         res.json({ success: true, deliveries: rows });
     } catch (err) {
@@ -374,7 +368,7 @@ app.get("/resources-list", async (req, res) => {
 
 // ===== CAMP DETAILS =====
 app.get("/camp-details", async (req, res) => {
-    const campId = 4;
+    const campId = 1;
     try {
         const [rows] = await dbPromise.query(
             `SELECT
@@ -402,7 +396,7 @@ app.get("/camp-details", async (req, res) => {
 
 // ===== CAMP STOCK =====
 app.get("/camp-stock", async (req, res) => {
-    const campId = 4;
+    const campId = 1;   
     try {
         const [rows] = await dbPromise.query(
             `SELECT r.resource_name,
@@ -431,7 +425,9 @@ app.get("/requests", async (req, res) => {
                             rc.camp_id,
                             rc.name AS camp_name,
                             r.resource_id,
-                            r.resource_name
+                            r.resource_name,
+                            IFNULL((SELECT SUM(quantity_supplied) FROM request_fulfillment rf WHERE rf.request_id = rr.request_id), 0) AS quantity_supplied,
+                            GREATEST(0, rr.quantity_required - IFNULL((SELECT SUM(quantity_supplied) FROM request_fulfillment rf WHERE rf.request_id = rr.request_id), 0)) AS remaining_quantity
                      FROM resource_request rr
                      LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id
                      LEFT JOIN resource r ON rr.resource_id = r.resource_id`;
@@ -591,7 +587,10 @@ app.post("/dispatch", async (req, res) => {
         }
 
         const request = requests[0];
-        
+        if (request.status === 'COMPLETED') {
+            return res.status(400).json({ success: false, message: "Request is already completed" });
+        }
+
         // Get inventory stock
         const [stocks] = await dbPromise.query(
             `SELECT * FROM inventory_stock 
@@ -614,6 +613,14 @@ app.post("/dispatch", async (req, res) => {
             });
         }
 
+        // Get total supplied so far for this request
+        const [fulfillments] = await dbPromise.query(
+            "SELECT IFNULL(SUM(quantity_supplied), 0) AS totalSupplied FROM request_fulfillment WHERE request_id = ?",
+            [requestId]
+        );
+        const totalSuppliedSoFar = fulfillments[0].totalSupplied || 0;
+        const cumulativeSupplied = totalSuppliedSoFar + quantitySupplied;
+
         // Update inventory
         const newQuantity = stock.quantity_available - quantitySupplied;
         await dbPromise.query(
@@ -621,9 +628,29 @@ app.post("/dispatch", async (req, res) => {
             [newQuantity, stock.inv_stock_id]
         );
 
+        // Update camp stock
+        const [campStocks] = await dbPromise.query(
+            `SELECT * FROM camp_stock WHERE camp_id = ? AND resource_id = ? LIMIT 1`,
+            [request.camp_id, request.resource_id]
+        );
+
+        if (campStocks.length > 0) {
+            const campStock = campStocks[0];
+            await dbPromise.query(
+                "UPDATE camp_stock SET quantity_available = ? WHERE stock_id = ?",
+                [campStock.quantity_available + quantitySupplied, campStock.stock_id]
+            );
+        } else {
+            await dbPromise.query(
+                `INSERT INTO camp_stock (camp_id, resource_id, quantity_available)
+                 VALUES (?, ?, ?)`,
+                [request.camp_id, request.resource_id, quantitySupplied]
+            );
+        }
+
         // Create fulfillment record
         const fulfillmentDate = new Date().toISOString().split('T')[0];
-        const fulfillmentStatus = (quantitySupplied >= request.quantity_required) ? "COMPLETED" : "PARTIAL";
+        const fulfillmentStatus = cumulativeSupplied >= request.quantity_required ? "COMPLETED" : "PARTIAL";
         
         const [result] = await dbPromise.query(
             `INSERT INTO request_fulfillment (request_id, quantity_supplied, fulfillment_date, fulfillment_status)
@@ -631,17 +658,18 @@ app.post("/dispatch", async (req, res) => {
             [requestId, quantitySupplied, fulfillmentDate, fulfillmentStatus]
         );
 
-        // Update request status
-        const newStatus = fulfillmentStatus === "COMPLETED" ? "COMPLETED" : "PARTIAL";
+        // Update request status based on cumulative supply
         await dbPromise.query(
             "UPDATE resource_request SET status = ? WHERE request_id = ?",
-            [newStatus, requestId]
+            [fulfillmentStatus, requestId]
         );
 
         res.json({
             success: true,
             message: "Dispatch recorded successfully",
-            fulfillmentId: result.insertId
+            fulfillmentId: result.insertId,
+            cumulativeSupplied,
+            remainingQuantity: Math.max(0, request.quantity_required - cumulativeSupplied)
         });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -657,7 +685,12 @@ app.get("/supply", async (req, res) => {
                     sp.quantity_supplied,
                     r.resource_name,
                     ci.name AS inventory_name,
-                    sup.supplier_name
+                    sup.supplier_name,
+                    CASE
+                        WHEN sp.supply_date > CURDATE() THEN 'SCHEDULED'
+                        WHEN sp.supply_date = CURDATE() THEN 'SCHEDULED TODAY'
+                        ELSE 'DELIVERED'
+                    END AS order_status
              FROM supply sp
              LEFT JOIN resource r ON sp.resource_id = r.resource_id
              LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
@@ -665,6 +698,52 @@ app.get("/supply", async (req, res) => {
              ORDER BY sp.supply_date DESC`
         );
         res.json({ success: true, supplies: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.get("/supplier-orders", async (req, res) => {
+    try {
+        const [rows] = await dbPromise.query(
+            `SELECT sp.supply_id,
+                    sp.supply_date,
+                    sp.quantity_supplied,
+                    r.resource_name,
+                    ci.name AS inventory_name,
+                    sup.supplier_name,
+                    'PENDING' AS order_status
+             FROM supply sp
+             LEFT JOIN resource r ON sp.resource_id = r.resource_id
+             LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
+             LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
+             WHERE sp.status = 'PENDING'
+             ORDER BY sp.supply_date ASC, sp.supply_id ASC`
+        );
+        res.json({ success: true, orders: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.get("/supplier-deliveries", async (req, res) => {
+    try {
+        const [rows] = await dbPromise.query(
+            `SELECT sp.supply_id,
+                    sp.supply_date,
+                    sp.quantity_supplied,
+                    r.resource_name,
+                    ci.name AS inventory_name,
+                    sup.supplier_name,
+                    'APPROVED' AS order_status
+             FROM supply sp
+             LEFT JOIN resource r ON sp.resource_id = r.resource_id
+             LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
+             LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
+             WHERE sp.status = 'APPROVED'
+             ORDER BY sp.supply_date DESC`
+        );
+        res.json({ success: true, deliveries: rows });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -679,41 +758,66 @@ app.post("/supply", async (req, res) => {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
-        // Insert supply record
+        // Insert supply record as a pending supplier order.
         const [result] = await dbPromise.query(
-            `INSERT INTO supply (supplier_id, inventory_id, resource_id, quantity_supplied, supply_date)
-             VALUES (?, ?, ?, ?, ?)`,
+            `INSERT INTO supply (supplier_id, inventory_id, resource_id, quantity_supplied, supply_date, status)
+             VALUES (?, ?, ?, ?, ?, 'PENDING')`,
             [supplierId, inventoryId, resourceId, quantitySupplied, supplyDate || new Date().toISOString().split('T')[0]]
         );
 
-        // Update inventory stock
+        res.json({
+            success: true,
+            message: "Supplier order created successfully",
+            supplyId: result.insertId
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.post("/supply/:id/approve", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [rows] = await dbPromise.query(
+            "SELECT * FROM supply WHERE supply_id = ?",
+            [id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Supplier order not found" });
+        }
+
+        const order = rows[0];
+        if (order.status !== 'PENDING') {
+            return res.status(400).json({ success: false, message: "Order is already approved or not pending" });
+        }
+
         const [stocks] = await dbPromise.query(
-            `SELECT * FROM inventory_stock 
-             WHERE inventory_id = ? AND resource_id = ?`,
-            [inventoryId, resourceId]
+            `SELECT * FROM inventory_stock WHERE inventory_id = ? AND resource_id = ?`,
+            [order.inventory_id, order.resource_id]
         );
 
         if (stocks.length > 0) {
             const stock = stocks[0];
-            const newQuantity = stock.quantity_available + quantitySupplied;
+            const newQuantity = stock.quantity_available + order.quantity_supplied;
             await dbPromise.query(
                 "UPDATE inventory_stock SET quantity_available = ? WHERE inv_stock_id = ?",
                 [newQuantity, stock.inv_stock_id]
             );
         } else {
-            // Create new stock entry if doesn't exist
             await dbPromise.query(
                 `INSERT INTO inventory_stock (inventory_id, resource_id, quantity_available, minimum_threshold)
                  VALUES (?, ?, ?, 0)`,
-                [inventoryId, resourceId, quantitySupplied]
+                [order.inventory_id, order.resource_id, order.quantity_supplied]
             );
         }
 
-        res.json({
-            success: true,
-            message: "Supply added successfully",
-            supplyId: result.insertId
-        });
+        await dbPromise.query(
+            "UPDATE supply SET status = 'APPROVED' WHERE supply_id = ?",
+            [id]
+        );
+
+        res.json({ success: true, message: "Supplier order approved and inventory updated" });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -742,7 +846,14 @@ app.get("/suppliers", async (req, res) => {
 // ===== GET INVENTORIES (for dropdown in forms) =====
 app.get("/inventories", async (req, res) => {
     try {
-        const [rows] = await dbPromise.query("SELECT inventory_id, name, location FROM central_inventory");
+        const [rows] = await dbPromise.query(
+            `SELECT inventory_id,
+                    name,
+                    location,
+                    total_capacity,
+                    created_at
+             FROM central_inventory`
+        );
         res.json({ success: true, inventories: rows });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });

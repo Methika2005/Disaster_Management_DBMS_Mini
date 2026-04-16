@@ -914,3 +914,17 @@ mysql> select \* from relief\_camp;
 
 1 row in set (0.00 sec)
 
+
+
+
+
+// added from srushti 
+
+ INSERT INTO inventory_stock (inventory_id, resource_id, quantity_available, minimum_threshold)
+    -> VALUES
+    ->     (1, 1, 1200, 300),
+    ->     (1, 2, 700, 200),
+    ->     (1, 3, 150, 50),
+    ->     (1, 4, 500, 100),
+    ->     (1, 5, 220, 50),
+    ->     (1, 6, 40, 10);

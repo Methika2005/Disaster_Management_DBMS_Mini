@@ -242,7 +242,7 @@ async function loadMyRequests() {
     const tableCount = document.getElementById("tableCount");
 
     try {
-        const response = await fetch("http://localhost:5000/requests?camp_id=4");
+        const response = await fetch("http://localhost:5000/requests?camp_id=1");
         const data = await response.json();
 
         tbody.innerHTML = "";
@@ -309,7 +309,7 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                camp_id: 4,
+                camp_id: 1,
                 resource_id: parseInt(resourceId, 10),
                 quantity: quantity
             })

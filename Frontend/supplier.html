@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Supplier - Add Supply</title>
+    <title>Supplier - Incoming Requests</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -46,22 +46,16 @@
     <!-- Sidebar -->
     <aside class="hidden lg:flex flex-col w-64 bg-slate-100 border-r border-slate-200 p-6 overflow-y-auto">
         <div class="mb-8">
-            <h2 class="text-lg font-bold text-primary">Supply Management</h2>
-            <p class="text-xs text-on-surface-variant">Add Resources</p>
+            <h2 class="text-lg font-bold text-primary">Supplier Requests</h2>
+            <p class="text-xs text-on-surface-variant">Review incoming requests and supply them.</p>
         </div>
         
         <nav class="space-y-2 flex-1">
-            <a href="supplier.html" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium">
-                <span class="material-symbols-outlined">local_shipping</span>Add Supply
+            <a href="#pendingOrdersSection" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium">
+                <span class="material-symbols-outlined">receipt_long</span>Incoming Requests
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">dashboard</span>Dashboard
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">inventory_2</span>Inventory
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">receipt_long</span>Requests
+            <a href="#supplyHistorySection" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
+                <span class="material-symbols-outlined">history</span>Completed Supplies
             </a>
         </nav>
 
@@ -75,65 +69,49 @@
         <div class="p-8 max-w-6xl mx-auto">
             <!-- Page Header -->
             <div class="mb-8">
-                <h2 class="text-3xl font-extrabold text-on-surface mb-2">Supply Management</h2>
-                <p class="text-on-surface-variant">Add supplies to central inventory and view supply history</p>
+                <h2 class="text-3xl font-extrabold text-on-surface mb-2">Supplier Requests</h2>
+                <p class="text-on-surface-variant">Review incoming supplier requests from inventory and complete them to move them into history.</p>
             </div>
 
             <!-- Two Column Layout -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Left Column: Add Supply Form -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary">add_circle</span>Add Supply
-                        </h3>
-
-                        <form id="addSupplyForm" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Supplier Name</label>
-                                <select id="supplierSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                                    <option value="">-- Choose Supplier --</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Central Inventory</label>
-                                <select id="inventorySelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                                    <option value="">-- Choose Inventory --</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Resource</label>
-                                <select id="resourceSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
-                                    <option value="">-- Choose Resource --</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity</label>
-                                <input id="quantityInput" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Supply Date</label>
-                                <input id="supplyDateInput" type="date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"/>
-                            </div>
-
-                            <button type="submit" class="w-full py-2 bg-secondary text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                                <span class="material-symbols-outlined text-lg">send</span>Add Supply
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Right Column: Supply History Table -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="grid grid-cols-1 gap-6">
+                <!-- Incoming Requests and History -->
+                <div class="lg:col-span-2 space-y-6">
+                    <section id="pendingOrdersSection" class="bg-white rounded-lg shadow overflow-hidden">
                         <div class="px-6 py-4 border-b border-slate-200">
-                            <h3 class="text-lg font-bold text-on-surface">Supply History</h3>
+                            <h3 class="text-lg font-bold text-on-surface">Incoming Requests</h3>
+                            <p class="text-sm text-on-surface-variant mt-1">These are the supplier requests coming from inventory. Click Supply to complete the request and move it into history.</p>
                         </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-slate-50 border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Order ID</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplier</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Warehouse</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Delivery Date</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingOrdersBody" class="divide-y divide-slate-200"></tbody>
+                            </table>
+                        </div>
+                        <div id="emptyPendingOrders" class="text-center py-10 text-on-surface-variant hidden">
+                            No pending supplier orders
+                        </div>
+                        <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                            <span id="pendingOrdersCount">Showing 0 orders</span>
+                        </div>
+                    </section>
 
+                    <section id="supplyHistorySection" class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-200">
+                            <h3 class="text-lg font-bold text-on-surface">Completed Supplies</h3>
+                            <p class="text-sm text-on-surface-variant mt-1">These requests have been completed by the supplier and moved into history.</p>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead class="bg-slate-50 border-b border-slate-200">
@@ -144,26 +122,20 @@
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Warehouse</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="supplyTableBody" class="divide-y divide-slate-200">
-                                    <!-- Rows will be inserted here -->
-                                </tbody>
+                                <tbody id="supplyTableBody" class="divide-y divide-slate-200"></tbody>
                             </table>
                         </div>
-
-                        <!-- Empty State -->
-                        <div id="emptyState" class="text-center py-12 hidden">
+                        <div id="emptyState" class="text-center py-10 hidden">
                             <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
-                            <p class="text-on-surface-variant text-lg">No supplies yet</p>
-                            <p class="text-on-surface-variant text-sm">Use the form to add your first supply</p>
+                            <p class="text-on-surface-variant text-lg">No supplier deliveries yet</p>
                         </div>
-
-                        <!-- Footer -->
                         <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
                             <span id="tableCount">Showing 0 supplies</span>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>
@@ -186,69 +158,72 @@ function logout() {
     window.location.href = "login.html";
 }
 
-// ===== SET TODAY'S DATE AS DEFAULT =====
-document.addEventListener("DOMContentLoaded", function() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById("supplyDateInput").value = today;
-});
+// ===== LOAD PENDING SUPPLIER ORDERS =====
+async function loadPendingSupplierOrders() {
+    const tbody = document.getElementById("pendingOrdersBody");
+    const emptyState = document.getElementById("emptyPendingOrders");
+    const countText = document.getElementById("pendingOrdersCount");
 
-// ===== LOAD SUPPLIERS =====
-async function loadSuppliers() {
     try {
-        const response = await fetch("http://localhost:5000/suppliers");
+        const response = await fetch("http://localhost:5000/supplier-orders");
         const data = await response.json();
 
-        if (data.success && data.suppliers) {
-            const select = document.getElementById("supplierSelect");
-            data.suppliers.forEach((supplier) => {
-                const option = document.createElement("option");
-                option.value = supplier.supplier_id;
-                option.textContent = supplier.supplier_name;
-                select.appendChild(option);
-            });
+        if (!data.success || !data.orders || data.orders.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            countText.textContent = "Showing 0 orders";
+            return;
         }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.orders.forEach((order) => {
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${order.supply_id}</td>
+                    <td class="px-6 py-4">${order.supplier_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${order.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${order.quantity_supplied}</td>
+                    <td class="px-6 py-4">${order.inventory_name || 'N/A'}</td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(order.supply_date).toLocaleDateString()}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary">${order.order_status}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="completeSupplierOrder(${order.supply_id})" class="px-3 py-1 bg-secondary text-white rounded-lg text-xs font-medium hover:opacity-90 transition-opacity">Supply</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        countText.textContent = `Showing ${data.orders.length} order${data.orders.length !== 1 ? 's' : ''}`;
     } catch (err) {
-        console.error("Error loading suppliers:", err);
+        console.error("Error loading pending orders:", err);
+        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-600">Error loading pending orders</td></tr>';
     }
 }
 
-// ===== LOAD INVENTORIES =====
-async function loadInventories() {
-    try {
-        const response = await fetch("http://localhost:5000/inventories");
-        const data = await response.json();
-
-        if (data.success && data.inventories) {
-            const select = document.getElementById("inventorySelect");
-            data.inventories.forEach((inventory) => {
-                const option = document.createElement("option");
-                option.value = inventory.inventory_id;
-                option.textContent = `${inventory.name} (${inventory.location || 'N/A'})`;
-                select.appendChild(option);
-            });
-        }
-    } catch (err) {
-        console.error("Error loading inventories:", err);
+async function completeSupplierOrder(orderId) {
+    if (!confirm("Supply this order and update inventory?")) {
+        return;
     }
-}
 
-// ===== LOAD RESOURCES =====
-async function loadResources() {
     try {
-        const response = await fetch("http://localhost:5000/resources-list");
+        const response = await fetch(`http://localhost:5000/supply/${orderId}/approve`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
         const data = await response.json();
-
-        if (data.success && data.resources) {
-            const select = document.getElementById("resourceSelect");
-            data.resources.forEach((resource) => {
-                const option = document.createElement("option");
-                option.value = resource.resource_id;
-                option.textContent = `${resource.resource_name} (${resource.unit})`;
-                select.appendChild(option);
-            });
+        if (data.success) {
+            alert(data.message);
+            loadPendingSupplierOrders();
+            loadSupplyHistory();
+        } else {
+            alert("Unable to supply order: " + (data.message || "Unknown error"));
         }
     } catch (err) {
-        console.error("Error loading resources:", err);
+        console.error("Error approving supplier order:", err);
+        alert("Error approving supplier order.");
     }
 }
 
@@ -259,10 +234,10 @@ async function loadSupplyHistory() {
     const tableCount = document.getElementById("tableCount");
 
     try {
-        const response = await fetch("http://localhost:5000/supply");
+        const response = await fetch("http://localhost:5000/supplier-deliveries");
         const data = await response.json();
 
-        if (!data.success || !data.supplies || data.supplies.length === 0) {
+        if (!data.success || !data.deliveries || data.deliveries.length === 0) {
             tbody.innerHTML = "";
             emptyState.classList.remove("hidden");
             tableCount.textContent = "Showing 0 supplies";
@@ -272,7 +247,7 @@ async function loadSupplyHistory() {
         emptyState.classList.add("hidden");
         tbody.innerHTML = "";
 
-        data.supplies.forEach((supply) => {
+        data.deliveries.forEach((supply) => {
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${supply.supply_id}</td>
@@ -281,68 +256,23 @@ async function loadSupplyHistory() {
                     <td class="px-6 py-4 font-medium">${supply.quantity_supplied}</td>
                     <td class="px-6 py-4">${supply.inventory_name || 'N/A'}</td>
                     <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(supply.supply_date).toLocaleDateString()}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary">${supply.order_status}</td>
                 </tr>
             `;
             tbody.innerHTML += row;
         });
 
-        tableCount.textContent = `Showing ${data.supplies.length} suppl${data.supplies.length !== 1 ? 'ies' : 'y'}`;
+        tableCount.textContent = `Showing ${data.deliveries.length} supply record${data.deliveries.length !== 1 ? 's' : ''}`;
 
     } catch (err) {
         console.error("Error loading supply history:", err);
-        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
     }
 }
 
-// ===== ADD SUPPLY FORM =====
-document.getElementById("addSupplyForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const supplierId = document.getElementById("supplierSelect").value;
-    const inventoryId = document.getElementById("inventorySelect").value;
-    const resourceId = document.getElementById("resourceSelect").value;
-    const quantity = document.getElementById("quantityInput").value;
-    const supplyDate = document.getElementById("supplyDateInput").value;
-
-    if (!supplierId || !inventoryId || !resourceId || !quantity) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    try {
-        const response = await fetch("http://localhost:5000/supply", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                supplierId: parseInt(supplierId),
-                inventoryId: parseInt(inventoryId),
-                resourceId: parseInt(resourceId),
-                quantitySupplied: parseInt(quantity),
-                supplyDate: supplyDate
-            })
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            alert("Supply added successfully!");
-            document.getElementById("addSupplyForm").reset();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById("supplyDateInput").value = today;
-            loadSupplyHistory();
-        } else {
-            alert("Error: " + data.message);
-        }
-    } catch (err) {
-        alert("Error adding supply");
-        console.error(err);
-    }
-});
-
 // Load on page load
 window.addEventListener("load", () => {
-    loadSuppliers();
-    loadInventories();
-    loadResources();
+    loadPendingSupplierOrders();
     loadSupplyHistory();
 });
 </script>

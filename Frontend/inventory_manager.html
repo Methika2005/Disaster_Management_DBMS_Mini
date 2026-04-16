@@ -44,10 +44,33 @@
 
 <div class="flex h-screen">
     <!-- Sidebar -->
-    <aside class="hidden lg:flex flex-col w-64 bg-slate-100 border-r border-slate-200 p-6 overflow-y-auto">
+    <aside class="hidden lg:flex flex-col w-80 bg-slate-100 border-r border-slate-200 p-6 overflow-y-auto">
         <div class="mb-8">
-            <h2 class="text-lg font-bold text-primary">Inventory</h2>
-            <p class="text-xs text-on-surface-variant">Central Warehouse</p>
+            <p class="text-xs uppercase tracking-[0.3em] text-on-surface-variant">Inventory Manager</p>
+            <h2 id="userEmail" class="mt-3 text-2xl font-extrabold text-primary">inventory@sys.com</h2>
+            <p class="mt-2 text-sm text-on-surface-variant">Central warehouse manager</p>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow p-6 mb-8">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-on-surface-variant mb-4">Inventory Details</h3>
+            <div class="space-y-3 text-sm text-on-surface">
+                <div>
+                    <p class="text-xs text-on-surface-variant">Inventory Name</p>
+                    <p id="inventoryName" class="font-medium">Loading...</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant">Location</p>
+                    <p id="inventoryLocation" class="font-medium">Loading...</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant">Total Capacity</p>
+                    <p id="inventoryCapacity" class="font-medium">Loading...</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant">Created On</p>
+                    <p id="inventoryCreated" class="font-medium">Loading...</p>
+                </div>
+            </div>
         </div>
         
         <nav class="space-y-2 flex-1">
@@ -116,6 +139,157 @@
                 </div>
             </div>
 
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">check_circle</span>Pending / Partial Camp Requests
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Qty</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplied</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Remaining</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingRequestsBody" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <div id="emptyPendingRequests" class="text-center py-10 text-on-surface-variant hidden">
+                    No pending camp requests
+                </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="pendingRequestsCount">Showing 0 requests</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">inventory_2</span>Completed Camp Requests
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Qty</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completedRequestsBody" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <div id="emptyCompletedRequests" class="text-center py-10 text-on-surface-variant hidden">
+                    No completed camp requests yet
+                </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="completedRequestsCount">Showing 0 requests</span>
+                </div>
+            </div>
+
+            <div class="grid gap-6 lg:grid-cols-2 mb-8">
+                <section class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">local_shipping</span>Raise Supplier Order
+                        </h3>
+                    </div>
+                    <div class="px-6 py-6">
+                        <form id="supplierOrderForm" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Supplier</label>
+                                <select id="supplierSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Inventory</label>
+                                <select id="inventorySelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Resource</label>
+                                <select id="supplierResourceSelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity</label>
+                                <input id="supplierQuantity" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity" />
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-secondary text-white rounded-2xl text-sm font-medium hover:opacity-90 transition-opacity">Send Supplier Request</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">history</span>Supplier Delivery History
+                        </h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supply ID</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplier</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Inventory</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="supplyHistoryBody" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                    <div id="emptySupplyHistory" class="text-center py-10 text-on-surface-variant hidden">
+                        No supply records yet
+                    </div>
+                    <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                        <span id="supplyHistoryCount">Showing 0 supplies</span>
+                    </div>
+                </section>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">history</span>Dispatch History
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Fulfillment ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dispatchHistoryBody" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <div id="emptyDispatchHistory" class="text-center py-10 text-on-surface-variant hidden">
+                    No dispatch history yet
+                </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="dispatchHistoryCount">Showing 0 dispatch records</span>
+                </div>
+            </div>
+
             <!-- Approved Requests for Dispatch -->
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-200">
@@ -132,7 +306,10 @@
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity Needed</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplied</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Remaining</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
                             </tr>
                         </thead>
@@ -166,6 +343,7 @@
             <div>
                 <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity to Dispatch</label>
                 <input id="dispatchQty" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity"/>
+                <p id="dispatchRemainingText" class="mt-2 text-xs text-on-surface-variant"></p>
             </div>
             <div class="flex gap-2">
                 <button type="button" onclick="closeDispatchModal()" class="flex-1 px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
@@ -191,6 +369,327 @@ function logout() {
     window.location.href = "login.html";
 }
 
+// ===== LOAD INVENTORY DETAILS =====
+async function loadInventoryDetails() {
+    const userEmail = localStorage.getItem("userEmail") || "inventory@sys.com";
+    document.getElementById("userEmail").textContent = userEmail;
+
+    try {
+        const response = await fetch("http://localhost:5000/inventories");
+        const data = await response.json();
+
+        let inventories = [];
+        if (Array.isArray(data)) {
+            inventories = data;
+        } else if (data.success && Array.isArray(data.inventories)) {
+            inventories = data.inventories;
+        }
+
+        if (inventories.length === 0) {
+            return;
+        }
+
+        const inventory = inventories[0];
+        document.getElementById("inventoryName").textContent = inventory.name || "N/A";
+        document.getElementById("inventoryLocation").textContent = inventory.location || "N/A";
+        document.getElementById("inventoryCapacity").textContent = inventory.total_capacity || "N/A";
+        document.getElementById("inventoryCreated").textContent = inventory.created_at ? new Date(inventory.created_at).toLocaleDateString() : "N/A";
+    } catch (err) {
+        console.error("Error loading inventory details:", err);
+    }
+}
+
+// ===== LOAD PENDING CAMP REQUESTS =====
+async function loadPendingRequests() {
+    const tbody = document.getElementById("pendingRequestsBody");
+    const emptyState = document.getElementById("emptyPendingRequests");
+    const count = document.getElementById("pendingRequestsCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/requests");
+        const data = await response.json();
+
+        if (!data.success || !data.requests || data.requests.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 requests";
+            return;
+        }
+
+        const pendingRequests = data.requests.filter(r => ["PENDING", "PARTIAL"].includes(r.status));
+
+        if (pendingRequests.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 requests";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        pendingRequests.forEach((request) => {
+            const priorityClass = getPriorityClass(request.priority_level);
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
+                    <td class="px-6 py-4">${request.camp_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
+                    <td class="px-6 py-4 font-medium">${request.quantity_supplied || 0}</td>
+                    <td class="px-6 py-4 font-medium">${request.remaining_quantity || request.quantity_required}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">${request.status || 'PENDING'}</span></td>
+                    <td class="px-6 py-4">
+                        <button onclick="openDispatchModal(${request.request_id}, ${request.remaining_quantity || request.quantity_required})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">Supply</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${pendingRequests.length} request${pendingRequests.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading pending requests:", err);
+        tbody.innerHTML = '<tr><td colspan="9" class="px-6 py-4 text-center text-red-600">Error loading pending requests</td></tr>';
+    }
+}
+
+async function updateRequestStatus(requestId, status) {
+    try {
+        const response = await fetch("http://localhost:5000/update-request-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ requestId, status })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            loadPendingRequests();
+            loadApprovedRequests();
+            loadInventory();
+        } else {
+            alert("Unable to update request status: " + (data.message || "Unknown error"));
+        }
+        loadCompletedRequests();
+    } catch (err) {
+        console.error("Error updating request status:", err);
+        alert("Error updating request status");
+    }
+}
+
+// ===== LOAD COMPLETED CAMP REQUESTS =====
+async function loadCompletedRequests() {
+    const tbody = document.getElementById("completedRequestsBody");
+    const emptyState = document.getElementById("emptyCompletedRequests");
+    const count = document.getElementById("completedRequestsCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/requests");
+        const data = await response.json();
+
+        const completedRequests = (data.success && Array.isArray(data.requests))
+            ? data.requests.filter(r => r.status === "COMPLETED")
+            : [];
+
+        if (completedRequests.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 requests";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        completedRequests.forEach((request) => {
+            const priorityClass = getPriorityClass(request.priority_level);
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
+                    <td class="px-6 py-4">${request.camp_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">COMPLETED</span></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${completedRequests.length} request${completedRequests.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading completed requests:", err);
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading completed requests</td></tr>';
+    }
+}
+
+// ===== LOAD SUPPLIERS AND INVENTORIES =====
+async function loadSupplierFormOptions() {
+    try {
+        const [suppliers, inventories, resources] = await Promise.all([
+            fetch("http://localhost:5000/suppliers").then(r => r.json()),
+            fetch("http://localhost:5000/inventories").then(r => r.json()),
+            fetch("http://localhost:5000/resources-simple").then(r => r.json())
+        ]);
+
+        const supplierSelect = document.getElementById("supplierSelect");
+        const inventorySelect = document.getElementById("inventorySelect");
+        const resourceSelect = document.getElementById("supplierResourceSelect");
+
+        supplierSelect.innerHTML = '<option value="">-- Choose Supplier --</option>';
+        inventorySelect.innerHTML = '<option value="">-- Choose Inventory --</option>';
+        resourceSelect.innerHTML = '<option value="">-- Choose Resource --</option>';
+
+        if (suppliers.success && suppliers.suppliers) {
+            suppliers.suppliers.forEach((supplier) => {
+                const option = document.createElement("option");
+                option.value = supplier.supplier_id;
+                option.textContent = supplier.supplier_name;
+                supplierSelect.appendChild(option);
+            });
+        }
+
+        if (inventories.success && inventories.inventories) {
+            inventories.inventories.forEach((inventory) => {
+                const option = document.createElement("option");
+                option.value = inventory.inventory_id;
+                option.textContent = `${inventory.name} (${inventory.location})`;
+                inventorySelect.appendChild(option);
+            });
+        }
+
+        if (resources) {
+            resources.forEach((resource) => {
+                const option = document.createElement("option");
+                option.value = resource.resource_id;
+                option.textContent = resource.resource_name;
+                resourceSelect.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error("Error loading supplier form options:", err);
+    }
+}
+
+// ===== LOAD SUPPLY HISTORY =====
+async function loadSupplyHistory() {
+    const tbody = document.getElementById("supplyHistoryBody");
+    const emptyState = document.getElementById("emptySupplyHistory");
+    const count = document.getElementById("supplyHistoryCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/supply");
+        const data = await response.json();
+
+        if (!data.success || !data.supplies || data.supplies.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 supplies";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.supplies.forEach((supply) => {
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${supply.supply_id}</td>
+                    <td class="px-6 py-4">${supply.supplier_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${supply.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${supply.quantity_supplied}</td>
+                    <td class="px-6 py-4">${supply.inventory_name || 'N/A'}</td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(supply.supply_date).toLocaleDateString()}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${data.supplies.length} supply record${data.supplies.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading supply history:", err);
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
+    }
+}
+
+async function loadDispatchHistory() {
+    const tbody = document.getElementById("dispatchHistoryBody");
+    const emptyState = document.getElementById("emptyDispatchHistory");
+    const count = document.getElementById("dispatchHistoryCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/supplier-fulfillments");
+        const data = await response.json();
+
+        if (!data.success || !data.deliveries || data.deliveries.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 dispatch records";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.deliveries.forEach((delivery) => {
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${delivery.fulfillment_id}</td>
+                    <td class="px-6 py-4">#${delivery.request_id || 'N/A'}</td>
+                    <td class="px-6 py-4">${delivery.camp_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${delivery.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${delivery.quantity_supplied}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${delivery.fulfillment_status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${delivery.fulfillment_status}</span></td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(delivery.fulfillment_date).toLocaleDateString()}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${data.deliveries.length} dispatch record${data.deliveries.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading dispatch history:", err);
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading dispatch history</td></tr>';
+    }
+}
+
+// ===== SUBMIT SUPPLIER ORDER =====
+document.getElementById("supplierOrderForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const supplierId = document.getElementById("supplierSelect").value;
+    const inventoryId = document.getElementById("inventorySelect").value;
+    const resourceId = document.getElementById("supplierResourceSelect").value;
+    const quantitySupplied = parseInt(document.getElementById("supplierQuantity").value, 10);
+
+    if (!supplierId || !inventoryId || !resourceId || !quantitySupplied || quantitySupplied <= 0) {
+        alert("Please complete all supplier order fields.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/supply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ supplierId: parseInt(supplierId, 10), inventoryId: parseInt(inventoryId, 10), resourceId: parseInt(resourceId, 10), quantitySupplied })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            alert("Supplier order created and inventory updated.");
+            document.getElementById("supplierOrderForm").reset();
+            loadInventory();
+            loadSupplyHistory();
+        } else {
+            alert("Error: " + (data.message || "Could not place supplier order."));
+        }
+    } catch (err) {
+        console.error("Error submitting supplier order:", err);
+        alert("Error submitting supplier order.");
+    }
+});
+
 // ===== LOAD INVENTORY =====
 async function loadInventory() {
     const tbody = document.getElementById("inventoryTableBody");
@@ -201,7 +700,14 @@ async function loadInventory() {
         const response = await fetch("http://localhost:5000/inventory");
         const data = await response.json();
 
-        if (!data.success || !data.inventory || data.inventory.length === 0) {
+        let inventoryRows = [];
+        if (Array.isArray(data)) {
+            inventoryRows = data;
+        } else if (data.success && Array.isArray(data.inventory)) {
+            inventoryRows = data.inventory;
+        }
+
+        if (inventoryRows.length === 0) {
             tbody.innerHTML = "";
             emptyState.classList.remove("hidden");
             count.textContent = "Showing 0 items";
@@ -271,9 +777,12 @@ async function loadApprovedRequests() {
                     <td class="px-6 py-4">${request.camp_name || 'N/A'}</td>
                     <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
                     <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
+                    <td class="px-6 py-4 font-medium">${request.quantity_supplied || 0}</td>
+                    <td class="px-6 py-4 font-medium">${request.remaining_quantity || 0}</td>
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium bg-indigo-100 text-indigo-800">${request.status}</span></td>
                     <td class="px-6 py-4">
-                        <button onclick="openDispatchModal(${request.request_id}, ${request.quantity_required})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
+                        <button onclick="openDispatchModal(${request.request_id}, ${request.remaining_quantity})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
                             Dispatch
                         </button>
                     </td>
@@ -286,7 +795,7 @@ async function loadApprovedRequests() {
 
     } catch (err) {
         console.error("Error loading requests:", err);
-        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
     }
 }
 
@@ -308,6 +817,7 @@ function openDispatchModal(requestId, qtyNeeded) {
     document.getElementById("requestIdField").value = requestId;
     document.getElementById("dispatchQty").max = qtyNeeded;
     document.getElementById("dispatchQty").value = qtyNeeded;
+    document.getElementById("dispatchRemainingText").textContent = `Maximum remaining supply: ${qtyNeeded}`;
     document.getElementById("dispatchModal").classList.remove("hidden");
 }
 
@@ -338,7 +848,10 @@ document.getElementById("dispatchForm").addEventListener("submit", async functio
             alert("Resources dispatched successfully!");
             closeDispatchModal();
             loadInventory();
+            loadPendingRequests();
             loadApprovedRequests();
+            loadCompletedRequests();
+            loadDispatchHistory();
         } else {
             alert("Error: " + data.message);
         }
@@ -350,8 +863,14 @@ document.getElementById("dispatchForm").addEventListener("submit", async functio
 
 // Load on page load
 window.addEventListener("load", () => {
+    loadInventoryDetails();
     loadInventory();
+    loadPendingRequests();
+    loadSupplierFormOptions();
+    loadSupplyHistory();
+    loadDispatchHistory();
     loadApprovedRequests();
+    loadCompletedRequests();
 });
 </script>
 </body>
