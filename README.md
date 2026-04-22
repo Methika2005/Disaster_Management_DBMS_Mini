@@ -80,8 +80,6 @@ The schema is based on the entities below:
 - `supply`
 - `resource_request`
 - `request_fulfillment`
-
-An additional operational table is also used by the app:
 - `camp_dispatch_history`
 
 The detailed SQL creation/insertion notes are available in [Final_DisasterDatabase.md](/c:/Users/shara/Desktop/Disaster_Management_DBMS_Mini/Final_DisasterDatabase.md).
