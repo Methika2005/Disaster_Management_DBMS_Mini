@@ -91,6 +91,7 @@
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Warehouse</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Delivery Date</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
@@ -121,6 +122,7 @@
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Warehouse</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
                                     </tr>
@@ -179,6 +181,7 @@ async function loadPendingSupplierOrders() {
         tbody.innerHTML = "";
 
         data.orders.forEach((order) => {
+            const priorityClass = getPriorityClass(order.priority_level);
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${order.supply_id}</td>
@@ -186,6 +189,7 @@ async function loadPendingSupplierOrders() {
                     <td class="px-6 py-4">${order.resource_name || 'N/A'}</td>
                     <td class="px-6 py-4 font-medium">${order.quantity_supplied}</td>
                     <td class="px-6 py-4">${order.inventory_name || 'N/A'}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${order.priority_level || 'N/A'}</span></td>
                     <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(order.supply_date).toLocaleDateString()}</td>
                     <td class="px-6 py-4 text-sm font-medium text-secondary">${order.order_status}</td>
                     <td class="px-6 py-4">
@@ -199,7 +203,7 @@ async function loadPendingSupplierOrders() {
         countText.textContent = `Showing ${data.orders.length} order${data.orders.length !== 1 ? 's' : ''}`;
     } catch (err) {
         console.error("Error loading pending orders:", err);
-        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-600">Error loading pending orders</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="px-6 py-4 text-center text-red-600">Error loading pending orders</td></tr>';
     }
 }
 
@@ -248,6 +252,7 @@ async function loadSupplyHistory() {
         tbody.innerHTML = "";
 
         data.deliveries.forEach((supply) => {
+            const priorityClass = getPriorityClass(supply.priority_level);
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${supply.supply_id}</td>
@@ -255,6 +260,7 @@ async function loadSupplyHistory() {
                     <td class="px-6 py-4">${supply.resource_name || 'N/A'}</td>
                     <td class="px-6 py-4 font-medium">${supply.quantity_supplied}</td>
                     <td class="px-6 py-4">${supply.inventory_name || 'N/A'}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${supply.priority_level || 'N/A'}</span></td>
                     <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(supply.supply_date).toLocaleDateString()}</td>
                     <td class="px-6 py-4 text-sm font-medium text-secondary">${supply.order_status}</td>
                 </tr>
@@ -266,7 +272,20 @@ async function loadSupplyHistory() {
 
     } catch (err) {
         console.error("Error loading supply history:", err);
-        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
+    }
+}
+
+function getPriorityClass(priority) {
+    switch (priority) {
+        case "HIGH":
+            return "bg-red-100 text-red-800";
+        case "MEDIUM":
+            return "bg-yellow-100 text-yellow-800";
+        case "LOW":
+            return "bg-green-100 text-green-800";
+        default:
+            return "bg-gray-100 text-gray-800";
     }
 }
 

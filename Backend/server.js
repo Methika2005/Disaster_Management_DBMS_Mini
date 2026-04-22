@@ -11,7 +11,7 @@ app.use(express.json());
 const db = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "Srushti@123",
+    password: process.env.DB_PASSWORD || "Srushti@512",
     database: process.env.DB_NAME || "disaster_relief_db_final"
 });
 
@@ -46,6 +46,49 @@ async function ensureSupplyStatusColumn() {
 }
 
 ensureSupplyStatusColumn();
+
+async function ensureSupplyPriorityColumn() {
+    try {
+        const databaseName = process.env.DB_NAME || "disaster_relief_db_final";
+        const [rows] = await dbPromise.query(
+            `SELECT COLUMN_NAME FROM information_schema.columns
+             WHERE table_schema = ? AND table_name = 'supply' AND column_name = 'priority_level'`,
+            [databaseName]
+        );
+
+        if (rows.length === 0) {
+            console.log("Adding missing supply.priority_level column...");
+            await dbPromise.query(
+                `ALTER TABLE supply ADD COLUMN priority_level VARCHAR(20) NOT NULL DEFAULT 'MEDIUM'`
+            );
+        }
+    } catch (err) {
+        console.error("Error ensuring supply.priority_level column:", err.message);
+    }
+}
+
+ensureSupplyPriorityColumn();
+
+async function ensureCampDispatchHistoryTable() {
+    try {
+        await dbPromise.query(
+            `CREATE TABLE IF NOT EXISTS camp_dispatch_history (
+                dispatch_id INT AUTO_INCREMENT PRIMARY KEY,
+                camp_id INT NOT NULL,
+                stock_id INT,
+                resource_id INT,
+                resource_name VARCHAR(100),
+                quantity_dispatched INT NOT NULL,
+                dispatch_date DATE NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`
+        );
+    } catch (err) {
+        console.error("Error ensuring camp_dispatch_history table:", err.message);
+    }
+}
+
+ensureCampDispatchHistoryTable();
 
 // Serve frontend files
 app.use(express.static(path.join(__dirname, "../Frontend")));
@@ -399,8 +442,10 @@ app.get("/camp-stock", async (req, res) => {
     const campId = 1;   
     try {
         const [rows] = await dbPromise.query(
-            `SELECT r.resource_name,
-                    cs.quantity_available AS quantity
+            `SELECT cs.stock_id,
+                    r.resource_name,
+                    cs.quantity_available AS quantity,
+                    cs.resource_id
              FROM camp_stock cs
              LEFT JOIN resource r ON cs.resource_id = r.resource_id
              WHERE cs.camp_id = ?
@@ -413,24 +458,73 @@ app.get("/camp-stock", async (req, res) => {
     }
 });
 
+// ===== CAMP DISPATCH HISTORY =====
+app.get("/camp-dispatch-history", async (req, res) => {
+    const campId = 1;
+    try {
+        const [rows] = await dbPromise.query(
+            `SELECT dispatch_id,
+                    stock_id,
+                    resource_id,
+                    resource_name,
+                    quantity_dispatched,
+                    dispatch_date
+             FROM camp_dispatch_history
+             WHERE camp_id = ?
+             ORDER BY dispatch_date DESC, dispatch_id DESC
+             LIMIT 20`,
+            [campId]
+        );
+
+        res.json({ success: true, dispatches: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ===== CAMP FULFILLMENT HISTORY FROM INVENTORY DISPATCHES =====
+app.get("/camp-fulfillment-history", async (req, res) => {
+    const campId = 1;
+    try {
+        const [rows] = await dbPromise.query(
+            `SELECT rf.fulfillment_id,
+                    rf.request_id,
+                    rf.quantity_supplied,
+                    rf.fulfillment_status,
+                    rf.fulfillment_date,
+                    r.resource_name
+             FROM request_fulfillment rf
+             LEFT JOIN resource_request rr ON rf.request_id = rr.request_id
+             LEFT JOIN resource r ON rr.resource_id = r.resource_id
+             WHERE rr.camp_id = ?
+             ORDER BY rf.fulfillment_date DESC, rf.fulfillment_id DESC`,
+            [campId]
+        );
+
+        res.json({ success: true, deliveries: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // ===== GET ALL REQUESTS (for Admin & Inventory Manager) =====
 app.get("/requests", async (req, res) => {
     const { camp_id } = req.query;
     try {
-        let query = `SELECT rr.request_id,
-                            rr.quantity_required,
-                            rr.priority_level,
-                            rr.status,
-                            rr.request_date,
-                            rc.camp_id,
-                            rc.name AS camp_name,
-                            r.resource_id,
-                            r.resource_name,
-                            IFNULL((SELECT SUM(quantity_supplied) FROM request_fulfillment rf WHERE rf.request_id = rr.request_id), 0) AS quantity_supplied,
-                            GREATEST(0, rr.quantity_required - IFNULL((SELECT SUM(quantity_supplied) FROM request_fulfillment rf WHERE rf.request_id = rr.request_id), 0)) AS remaining_quantity
-                     FROM resource_request rr
-                     LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id
-                     LEFT JOIN resource r ON rr.resource_id = r.resource_id`;
+        let query = "SELECT rr.request_id, " +
+                            "rr.quantity_required, " +
+                            "rr.priority_level, " +
+                            "rr.status, " +
+                            "rr.request_date, " +
+                            "rc.camp_id, " +
+                            "rc.name AS camp_name, " +
+                            "r.resource_id, " +
+                            "r.resource_name, " +
+                            "IFNULL((SELECT SUM(quantity_supplied) FROM request_fulfillment rf WHERE rf.request_id = rr.request_id), 0) AS quantity_supplied, " +
+                            "GREATEST(0, rr.quantity_required - IFNULL((SELECT SUM(quantity_supplied) FROM request_fulfillment rf WHERE rf.request_id = rr.request_id), 0)) AS remaining_quantity " +
+                            "FROM resource_request rr " +
+                            "LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id " +
+                            "LEFT JOIN resource r ON rr.resource_id = r.resource_id";
         const params = [];
 
         if (camp_id) {
@@ -438,7 +532,7 @@ app.get("/requests", async (req, res) => {
             params.push(camp_id);
         }
 
-        query += " ORDER BY rr.request_date DESC";
+        query += " ORDER BY FIELD(rr.status, 'PENDING', 'PARTIAL', 'COMPLETED'), FIELD(rr.priority_level, 'HIGH', 'MEDIUM', 'LOW'), rr.request_date DESC, rr.request_id DESC";
 
         const [rows] = await dbPromise.query(query, params);
         res.json({ success: true, requests: rows });
@@ -464,6 +558,43 @@ app.get("/camp-requests/:campId", async (req, res) => {
              ORDER BY rr.request_date DESC`,
             [campId]
         );
+        res.json({ success: true, requests: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ===== GET CAMP REQUESTS READY FOR FULFILLMENT =====
+app.get("/approved-requests", async (req, res) => {
+    const campId = 1;
+    try {
+        const [rows] = await dbPromise.query(
+            `SELECT rr.request_id,
+                    rr.quantity_required,
+                    rr.priority_level AS priority,
+                    rr.status,
+                    rr.request_date,
+                    r.resource_name,
+                    IFNULL((
+                        SELECT SUM(rf.quantity_supplied)
+                        FROM request_fulfillment rf
+                        WHERE rf.request_id = rr.request_id
+                    ), 0) AS quantity_supplied,
+                    GREATEST(
+                        0,
+                        rr.quantity_required - IFNULL((
+                            SELECT SUM(rf.quantity_supplied)
+                            FROM request_fulfillment rf
+                            WHERE rf.request_id = rr.request_id
+                        ), 0)
+                    ) AS remaining_quantity
+             FROM resource_request rr
+             LEFT JOIN resource r ON rr.resource_id = r.resource_id
+             WHERE rr.camp_id = ?
+             ORDER BY FIELD(rr.status, 'PENDING', 'PARTIAL', 'COMPLETED'), FIELD(rr.priority_level, 'HIGH', 'MEDIUM', 'LOW'), rr.request_date DESC, rr.request_id DESC`,
+            [campId]
+        );
+
         res.json({ success: true, requests: rows });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -497,26 +628,7 @@ app.post("/requests", async (req, res) => {
     }
 });
 
-// ===== CREATE NEW REQUEST (Camp Manager) =====
-app.post("/request", async (req, res) => {
-    const { camp_id, resource_id, quantity } = req.body;
-    try {
-        if (!camp_id || !resource_id || !quantity || parseInt(quantity, 10) <= 0) {
-            return res.status(400).json({ success: false, message: "camp_id, resource_id, and quantity (>0) are required" });
-        }
 
-        const requestDate = new Date().toISOString().split("T")[0];
-        const [result] = await dbPromise.query(
-            `INSERT INTO resource_request (camp_id, resource_id, quantity_required, priority_level, status, request_date)
-             VALUES (?, ?, ?, NULL, 'PENDING', ?)`,
-            [camp_id, resource_id, parseInt(quantity, 10), requestDate]
-        );
-
-        res.json({ success: true, message: "Request created successfully", requestId: result.insertId });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
 
 // ===== APPROVE/REJECT REQUEST (Admin) =====
 app.put("/requests/:id", async (req, res) => {
@@ -570,9 +682,10 @@ app.get("/inventory", async (req, res) => {
 // ===== DISPATCH RESOURCES (Inventory Manager) =====
 app.post("/dispatch", async (req, res) => {
     const { requestId, quantitySupplied } = req.body;
+    const dispatchQuantity = parseInt(quantitySupplied, 10);
     
     try {
-        if (!requestId || !quantitySupplied) {
+        if (!requestId || !dispatchQuantity || dispatchQuantity <= 0) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
@@ -591,6 +704,21 @@ app.post("/dispatch", async (req, res) => {
             return res.status(400).json({ success: false, message: "Request is already completed" });
         }
 
+        // Get total supplied so far for this request
+        const [fulfillments] = await dbPromise.query(
+            "SELECT IFNULL(SUM(quantity_supplied), 0) AS totalSupplied FROM request_fulfillment WHERE request_id = ?",
+            [requestId]
+        );
+        const totalSuppliedSoFar = Number(fulfillments[0].totalSupplied || 0);
+        const remainingRequired = Number(request.quantity_required) - totalSuppliedSoFar;
+
+        if (dispatchQuantity > remainingRequired) {
+            return res.status(400).json({
+                success: false,
+                message: "Quantity cannot be more than remaining request quantity. Remaining: " + remainingRequired
+            });
+        }
+
         // Get inventory stock
         const [stocks] = await dbPromise.query(
             `SELECT * FROM inventory_stock 
@@ -606,23 +734,17 @@ app.post("/dispatch", async (req, res) => {
         const stock = stocks[0];
 
         // Check if sufficient quantity available
-        if (stock.quantity_available < quantitySupplied) {
+        if (Number(stock.quantity_available) < dispatchQuantity) {
             return res.status(400).json({ 
                 success: false, 
                 message: "Insufficient inventory. Available: " + stock.quantity_available 
             });
         }
 
-        // Get total supplied so far for this request
-        const [fulfillments] = await dbPromise.query(
-            "SELECT IFNULL(SUM(quantity_supplied), 0) AS totalSupplied FROM request_fulfillment WHERE request_id = ?",
-            [requestId]
-        );
-        const totalSuppliedSoFar = fulfillments[0].totalSupplied || 0;
-        const cumulativeSupplied = totalSuppliedSoFar + quantitySupplied;
+        const cumulativeSupplied = totalSuppliedSoFar + dispatchQuantity;
 
         // Update inventory
-        const newQuantity = stock.quantity_available - quantitySupplied;
+        const newQuantity = Number(stock.quantity_available) - dispatchQuantity;
         await dbPromise.query(
             "UPDATE inventory_stock SET quantity_available = ? WHERE inv_stock_id = ?",
             [newQuantity, stock.inv_stock_id]
@@ -636,15 +758,16 @@ app.post("/dispatch", async (req, res) => {
 
         if (campStocks.length > 0) {
             const campStock = campStocks[0];
+            const updatedCampQuantity = Number(campStock.quantity_available) + dispatchQuantity;
             await dbPromise.query(
                 "UPDATE camp_stock SET quantity_available = ? WHERE stock_id = ?",
-                [campStock.quantity_available + quantitySupplied, campStock.stock_id]
+                [updatedCampQuantity, campStock.stock_id]
             );
         } else {
             await dbPromise.query(
                 `INSERT INTO camp_stock (camp_id, resource_id, quantity_available)
                  VALUES (?, ?, ?)`,
-                [request.camp_id, request.resource_id, quantitySupplied]
+                [request.camp_id, request.resource_id, dispatchQuantity]
             );
         }
 
@@ -655,7 +778,7 @@ app.post("/dispatch", async (req, res) => {
         const [result] = await dbPromise.query(
             `INSERT INTO request_fulfillment (request_id, quantity_supplied, fulfillment_date, fulfillment_status)
              VALUES (?, ?, ?, ?)`,
-            [requestId, quantitySupplied, fulfillmentDate, fulfillmentStatus]
+            [requestId, dispatchQuantity, fulfillmentDate, fulfillmentStatus]
         );
 
         // Update request status based on cumulative supply
@@ -669,7 +792,7 @@ app.post("/dispatch", async (req, res) => {
             message: "Dispatch recorded successfully",
             fulfillmentId: result.insertId,
             cumulativeSupplied,
-            remainingQuantity: Math.max(0, request.quantity_required - cumulativeSupplied)
+            remainingQuantity: Math.max(0, Number(request.quantity_required) - cumulativeSupplied)
         });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -683,6 +806,7 @@ app.get("/supply", async (req, res) => {
             `SELECT sp.supply_id,
                     sp.supply_date,
                     sp.quantity_supplied,
+                    sp.priority_level,
                     r.resource_name,
                     ci.name AS inventory_name,
                     sup.supplier_name,
@@ -709,6 +833,7 @@ app.get("/supplier-orders", async (req, res) => {
             `SELECT sp.supply_id,
                     sp.supply_date,
                     sp.quantity_supplied,
+                    sp.priority_level,
                     r.resource_name,
                     ci.name AS inventory_name,
                     sup.supplier_name,
@@ -718,7 +843,7 @@ app.get("/supplier-orders", async (req, res) => {
              LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
              LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
              WHERE sp.status = 'PENDING'
-             ORDER BY sp.supply_date ASC, sp.supply_id ASC`
+             ORDER BY FIELD(sp.priority_level, 'HIGH', 'MEDIUM', 'LOW'), sp.supply_date ASC, sp.supply_id ASC`
         );
         res.json({ success: true, orders: rows });
     } catch (err) {
@@ -732,6 +857,7 @@ app.get("/supplier-deliveries", async (req, res) => {
             `SELECT sp.supply_id,
                     sp.supply_date,
                     sp.quantity_supplied,
+                    sp.priority_level,
                     r.resource_name,
                     ci.name AS inventory_name,
                     sup.supplier_name,
@@ -751,7 +877,8 @@ app.get("/supplier-deliveries", async (req, res) => {
 
 // ===== ADD SUPPLY (Supplier) =====
 app.post("/supply", async (req, res) => {
-    const { supplierId, inventoryId, resourceId, quantitySupplied, supplyDate } = req.body;
+    const { supplierId, inventoryId, resourceId, quantitySupplied, supplyDate, priorityLevel } = req.body;
+    const priority = ["HIGH", "MEDIUM", "LOW"].includes(priorityLevel) ? priorityLevel : "MEDIUM";
     
     try {
         if (!supplierId || !inventoryId || !resourceId || !quantitySupplied) {
@@ -760,9 +887,9 @@ app.post("/supply", async (req, res) => {
 
         // Insert supply record as a pending supplier order.
         const [result] = await dbPromise.query(
-            `INSERT INTO supply (supplier_id, inventory_id, resource_id, quantity_supplied, supply_date, status)
-             VALUES (?, ?, ?, ?, ?, 'PENDING')`,
-            [supplierId, inventoryId, resourceId, quantitySupplied, supplyDate || new Date().toISOString().split('T')[0]]
+            `INSERT INTO supply (supplier_id, inventory_id, resource_id, quantity_supplied, supply_date, status, priority_level)
+             VALUES (?, ?, ?, ?, ?, 'PENDING', ?)`,
+            [supplierId, inventoryId, resourceId, quantitySupplied, supplyDate || new Date().toISOString().split('T')[0], priority]
         );
 
         res.json({
@@ -878,6 +1005,71 @@ app.get("/resources", async (req, res) => {
     }
 });
 
-app.listen(5000, () => {
-    console.log("Server running on port 5000");
+// ===== DISPATCH FROM CAMP STOCK (Camp Manager) =====
+app.post("/dispatch-camp-stock", async (req, res) => {
+    const { stockId, quantityDispatched } = req.body;
+    const campId = 1; // Assuming camp manager is working with camp 1
+    
+    try {
+        if (!stockId || !quantityDispatched) {
+            return res.status(400).json({ success: false, message: "Missing required fields" });
+        }
+
+        // Get camp stock details
+        const [stocks] = await dbPromise.query(
+            `SELECT cs.stock_id, cs.quantity_available, cs.resource_id, r.resource_name
+             FROM camp_stock cs
+             LEFT JOIN resource r ON cs.resource_id = r.resource_id
+             WHERE cs.stock_id = ? AND cs.camp_id = ?`,
+            [stockId, campId]
+        );
+
+        if (stocks.length === 0) {
+            return res.status(404).json({ success: false, message: "Stock not found" });
+        }
+
+        const stock = stocks[0];
+
+        // Check if sufficient quantity available
+        if (stock.quantity_available < quantityDispatched) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Insufficient stock. Available: " + stock.quantity_available 
+            });
+        }
+
+        // Reduce camp stock
+        const newQuantity = stock.quantity_available - quantityDispatched;
+        await dbPromise.query(
+            "UPDATE camp_stock SET quantity_available = ? WHERE stock_id = ?",
+            [newQuantity, stockId]
+        );
+
+        // Create camp dispatch history record
+        const fulfillmentDate = new Date().toISOString().split('T')[0];
+        
+        const [result] = await dbPromise.query(
+            `INSERT INTO camp_dispatch_history
+                (camp_id, stock_id, resource_id, resource_name, quantity_dispatched, dispatch_date)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [campId, stockId, stock.resource_id, stock.resource_name, quantityDispatched, fulfillmentDate]
+        );
+
+        res.json({
+            success: true,
+            message: "Resources dispatched successfully",
+            dispatchId: result.insertId,
+            resourceName: stock.resource_name,
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+

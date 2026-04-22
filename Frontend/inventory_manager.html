@@ -72,23 +72,7 @@
                 </div>
             </div>
         </div>
-        
-        <nav class="space-y-2 flex-1">
-            <a href="inventory_manager.html" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium">
-                <span class="material-symbols-outlined">inventory_2</span>Inventory
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">dashboard</span>Dashboard
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">description</span>Requests
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">local_shipping</span>Supply
-            </a>
-        </nav>
-
-        <div class="border-t border-slate-200 pt-4">
+        <div class="mt-auto border-t border-slate-200 pt-4">
             <p class="text-xs text-on-surface-variant text-center">Disaster Relief System v1.0</p>
         </div>
     </aside>
@@ -200,7 +184,7 @@
                 </div>
             </div>
 
-            <div class="grid gap-6 lg:grid-cols-2 mb-8">
+            <div class="grid gap-6 mb-8">
                 <section class="bg-white rounded-lg shadow overflow-hidden">
                     <div class="px-6 py-4 border-b border-slate-200">
                         <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
@@ -225,37 +209,16 @@
                                 <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity</label>
                                 <input id="supplierQuantity" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity" />
                             </div>
+                            <div>
+                                <label class="block text-xs font-bold text-on-surface-variant mb-2">Priority</label>
+                                <select id="supplierPriority" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="HIGH">High</option>
+                                    <option value="MEDIUM" selected>Medium</option>
+                                    <option value="LOW">Low</option>
+                                </select>
+                            </div>
                             <button type="submit" class="w-full py-3 bg-secondary text-white rounded-2xl text-sm font-medium hover:opacity-90 transition-opacity">Send Supplier Request</button>
                         </form>
-                    </div>
-                </section>
-
-                <section class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-200">
-                        <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary">history</span>Supplier Delivery History
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-slate-50 border-b border-slate-200">
-                                <tr>
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supply ID</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplier</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Inventory</th>
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="supplyHistoryBody" class="divide-y divide-slate-200"></tbody>
-                        </table>
-                    </div>
-                    <div id="emptySupplyHistory" class="text-center py-10 text-on-surface-variant hidden">
-                        No supply records yet
-                    </div>
-                    <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
-                        <span id="supplyHistoryCount">Showing 0 supplies</span>
                     </div>
                 </section>
             </div>
@@ -263,95 +226,59 @@
             <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
                 <div class="px-6 py-4 border-b border-slate-200">
                     <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">history</span>Dispatch History
+                        <span class="material-symbols-outlined text-primary">assignment</span>Supplier Order Status
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Fulfillment ID</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supply ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplier</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Inventory</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
                             </tr>
                         </thead>
-                        <tbody id="dispatchHistoryBody" class="divide-y divide-slate-200"></tbody>
+                        <tbody id="supplierOrderStatusBody" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
-                <div id="emptyDispatchHistory" class="text-center py-10 text-on-surface-variant hidden">
-                    No dispatch history yet
+                <div id="emptySupplierOrderStatus" class="text-center py-10 text-on-surface-variant hidden">
+                    No supplier orders yet
                 </div>
                 <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
-                    <span id="dispatchHistoryCount">Showing 0 dispatch records</span>
+                    <span id="supplierOrderStatusCount">Showing 0 supplier orders</span>
                 </div>
             </div>
 
-            <!-- Approved Requests for Dispatch -->
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-200">
-                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">local_shipping</span>Approved Requests for Dispatch
-                    </h3>
-                </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity Needed</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplied</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Remaining</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="requestsTableBody" class="divide-y divide-slate-200">
-                            <!-- Rows will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Empty State -->
-                <div id="emptyStateRequests" class="text-center py-12 hidden">
-                    <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
-                    <p class="text-on-surface-variant text-lg">No approved requests pending dispatch</p>
-                </div>
-
-                <!-- Footer -->
-                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
-                    <span id="requestsCount">Showing 0 requests</span>
-                </div>
-            </div>
         </div>
     </main>
 </div>
 
-<!-- Dispatch Modal -->
-<div id="dispatchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+<!-- Supply Request Modal -->
+<div id="supplyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-lg max-w-md w-full p-6">
-        <h3 class="text-lg font-bold mb-4">Dispatch Resources</h3>
-        <form id="dispatchForm" class="space-y-4">
-            <input type="hidden" id="requestIdField"/>
+        <h3 class="text-lg font-bold text-on-surface mb-4">Supply Camp Request</h3>
+        <form id="supplyRequestForm" class="space-y-4">
+            <input type="hidden" id="supplyRequestId"/>
             <div>
-                <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity to Dispatch</label>
-                <input id="dispatchQty" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity"/>
-                <p id="dispatchRemainingText" class="mt-2 text-xs text-on-surface-variant"></p>
+                <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity to Supply</label>
+                <input id="supplyQuantity" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity"/>
+                <p id="supplyLimitText" class="mt-2 text-xs text-on-surface-variant"></p>
             </div>
             <div class="flex gap-2">
-                <button type="button" onclick="closeDispatchModal()" class="flex-1 px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity">Dispatch</button>
+                <button type="button" onclick="closeSupplyModal()" class="flex-1 px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-secondary text-white rounded-lg hover:opacity-90 transition-opacity">Supply</button>
             </div>
         </form>
     </div>
 </div>
+
+
 
 <script>
 // ===== PAGE PROTECTION =====
@@ -441,7 +368,7 @@ async function loadPendingRequests() {
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">${request.status || 'PENDING'}</span></td>
                     <td class="px-6 py-4">
-                        <button onclick="openDispatchModal(${request.request_id}, ${request.remaining_quantity || request.quantity_required})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">Supply</button>
+                        <button onclick="openSupplyModal(${request.request_id}, ${request.remaining_quantity || request.quantity_required})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">Supply</button>
                     </td>
                 </tr>
             `;
@@ -466,7 +393,6 @@ async function updateRequestStatus(requestId, status) {
 
         if (data.success) {
             loadPendingRequests();
-            loadApprovedRequests();
             loadInventory();
         } else {
             alert("Unable to update request status: " + (data.message || "Unknown error"));
@@ -572,87 +498,71 @@ async function loadSupplierFormOptions() {
     }
 }
 
-// ===== LOAD SUPPLY HISTORY =====
-async function loadSupplyHistory() {
-    const tbody = document.getElementById("supplyHistoryBody");
-    const emptyState = document.getElementById("emptySupplyHistory");
-    const count = document.getElementById("supplyHistoryCount");
+async function loadSupplierOrderStatus() {
+    const tbody = document.getElementById("supplierOrderStatusBody");
+    const emptyState = document.getElementById("emptySupplierOrderStatus");
+    const count = document.getElementById("supplierOrderStatusCount");
 
     try {
-        const response = await fetch("http://localhost:5000/supply");
-        const data = await response.json();
+        const [pendingData, approvedData] = await Promise.all([
+            fetch("http://localhost:5000/supplier-orders").then(r => r.json()),
+            fetch("http://localhost:5000/supplier-deliveries").then(r => r.json())
+        ]);
 
-        if (!data.success || !data.supplies || data.supplies.length === 0) {
+        const pendingOrders = pendingData.success && Array.isArray(pendingData.orders)
+            ? pendingData.orders
+            : [];
+        const approvedOrders = approvedData.success && Array.isArray(approvedData.deliveries)
+            ? approvedData.deliveries
+            : [];
+        const orders = [...pendingOrders, ...approvedOrders].sort((a, b) => {
+            const priorityRank = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+            const priorityDiff = (priorityRank[a.priority_level] ?? 3) - (priorityRank[b.priority_level] ?? 3);
+            if (priorityDiff !== 0) {
+                return priorityDiff;
+            }
+            const dateDiff = new Date(b.supply_date) - new Date(a.supply_date);
+            return dateDiff || Number(b.supply_id || 0) - Number(a.supply_id || 0);
+        });
+
+        if (orders.length === 0) {
             tbody.innerHTML = "";
             emptyState.classList.remove("hidden");
-            count.textContent = "Showing 0 supplies";
+            count.textContent = "Showing 0 supplier orders";
             return;
         }
 
         emptyState.classList.add("hidden");
         tbody.innerHTML = "";
 
-        data.supplies.forEach((supply) => {
+        orders.forEach((order) => {
+            const isApproved = order.order_status === "APPROVED";
+            const statusClass = isApproved ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800";
+            const statusText = isApproved ? "COMPLETED" : "PENDING";
+            const priorityClass = getPriorityClass(order.priority_level);
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4 font-medium text-primary">#${supply.supply_id}</td>
-                    <td class="px-6 py-4">${supply.supplier_name || 'N/A'}</td>
-                    <td class="px-6 py-4">${supply.resource_name || 'N/A'}</td>
-                    <td class="px-6 py-4 font-medium">${supply.quantity_supplied}</td>
-                    <td class="px-6 py-4">${supply.inventory_name || 'N/A'}</td>
-                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(supply.supply_date).toLocaleDateString()}</td>
+                    <td class="px-6 py-4 font-medium text-primary">#${order.supply_id}</td>
+                    <td class="px-6 py-4">${order.supplier_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${order.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${order.quantity_supplied}</td>
+                    <td class="px-6 py-4">${order.inventory_name || 'N/A'}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${order.priority_level || 'N/A'}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${statusText}</span></td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(order.supply_date).toLocaleDateString()}</td>
                 </tr>
             `;
             tbody.innerHTML += row;
         });
 
-        count.textContent = `Showing ${data.supplies.length} supply record${data.supplies.length !== 1 ? 's' : ''}`;
+        count.textContent = `Showing ${orders.length} supplier order${orders.length !== 1 ? 's' : ''}`;
     } catch (err) {
-        console.error("Error loading supply history:", err);
-        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading supply history</td></tr>';
+        console.error("Error loading supplier order status:", err);
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading supplier order status</td></tr>';
     }
 }
 
-async function loadDispatchHistory() {
-    const tbody = document.getElementById("dispatchHistoryBody");
-    const emptyState = document.getElementById("emptyDispatchHistory");
-    const count = document.getElementById("dispatchHistoryCount");
 
-    try {
-        const response = await fetch("http://localhost:5000/supplier-fulfillments");
-        const data = await response.json();
-
-        if (!data.success || !data.deliveries || data.deliveries.length === 0) {
-            tbody.innerHTML = "";
-            emptyState.classList.remove("hidden");
-            count.textContent = "Showing 0 dispatch records";
-            return;
-        }
-
-        emptyState.classList.add("hidden");
-        tbody.innerHTML = "";
-
-        data.deliveries.forEach((delivery) => {
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4 font-medium text-primary">#${delivery.fulfillment_id}</td>
-                    <td class="px-6 py-4">#${delivery.request_id || 'N/A'}</td>
-                    <td class="px-6 py-4">${delivery.camp_name || 'N/A'}</td>
-                    <td class="px-6 py-4">${delivery.resource_name || 'N/A'}</td>
-                    <td class="px-6 py-4 font-medium">${delivery.quantity_supplied}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${delivery.fulfillment_status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${delivery.fulfillment_status}</span></td>
-                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(delivery.fulfillment_date).toLocaleDateString()}</td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-
-        count.textContent = `Showing ${data.deliveries.length} dispatch record${data.deliveries.length !== 1 ? 's' : ''}`;
-    } catch (err) {
-        console.error("Error loading dispatch history:", err);
-        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading dispatch history</td></tr>';
-    }
-}
 
 // ===== SUBMIT SUPPLIER ORDER =====
 document.getElementById("supplierOrderForm").addEventListener("submit", async function(e) {
@@ -662,6 +572,7 @@ document.getElementById("supplierOrderForm").addEventListener("submit", async fu
     const inventoryId = document.getElementById("inventorySelect").value;
     const resourceId = document.getElementById("supplierResourceSelect").value;
     const quantitySupplied = parseInt(document.getElementById("supplierQuantity").value, 10);
+    const priorityLevel = document.getElementById("supplierPriority").value;
 
     if (!supplierId || !inventoryId || !resourceId || !quantitySupplied || quantitySupplied <= 0) {
         alert("Please complete all supplier order fields.");
@@ -672,7 +583,7 @@ document.getElementById("supplierOrderForm").addEventListener("submit", async fu
         const response = await fetch("http://localhost:5000/supply", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ supplierId: parseInt(supplierId, 10), inventoryId: parseInt(inventoryId, 10), resourceId: parseInt(resourceId, 10), quantitySupplied })
+            body: JSON.stringify({ supplierId: parseInt(supplierId, 10), inventoryId: parseInt(inventoryId, 10), resourceId: parseInt(resourceId, 10), quantitySupplied, priorityLevel })
         });
 
         const data = await response.json();
@@ -680,13 +591,69 @@ document.getElementById("supplierOrderForm").addEventListener("submit", async fu
             alert("Supplier order created and inventory updated.");
             document.getElementById("supplierOrderForm").reset();
             loadInventory();
-            loadSupplyHistory();
+            loadSupplierOrderStatus();
         } else {
             alert("Error: " + (data.message || "Could not place supplier order."));
         }
     } catch (err) {
         console.error("Error submitting supplier order:", err);
         alert("Error submitting supplier order.");
+    }
+});
+
+function openSupplyModal(requestId, remainingQuantity) {
+    const quantityInput = document.getElementById("supplyQuantity");
+
+    document.getElementById("supplyRequestId").value = requestId;
+    quantityInput.max = remainingQuantity;
+    quantityInput.value = remainingQuantity;
+    document.getElementById("supplyLimitText").textContent = `Remaining quantity: ${remainingQuantity}`;
+    document.getElementById("supplyModal").classList.remove("hidden");
+}
+
+function closeSupplyModal() {
+    document.getElementById("supplyModal").classList.add("hidden");
+    document.getElementById("supplyRequestForm").reset();
+}
+
+document.getElementById("supplyRequestForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const requestId = parseInt(document.getElementById("supplyRequestId").value, 10);
+    const quantitySupplied = parseInt(document.getElementById("supplyQuantity").value, 10);
+    const maxQuantity = parseInt(document.getElementById("supplyQuantity").max, 10);
+
+    if (!requestId || !quantitySupplied || quantitySupplied <= 0) {
+        alert("Please enter a valid supply quantity.");
+        return;
+    }
+
+    if (quantitySupplied > maxQuantity) {
+        alert(`Quantity cannot be more than remaining quantity (${maxQuantity}).`);
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/dispatch", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ requestId, quantitySupplied })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Resources supplied successfully.");
+            closeSupplyModal();
+            loadInventory();
+            loadPendingRequests();
+            loadCompletedRequests();
+        } else {
+            alert("Error: " + (data.message || data.error || "Could not supply resources."));
+        }
+    } catch (err) {
+        console.error("Error supplying request:", err);
+        alert("Error supplying request.");
     }
 });
 
@@ -741,64 +708,6 @@ async function loadInventory() {
     }
 }
 
-// ===== LOAD APPROVED REQUESTS =====
-async function loadApprovedRequests() {
-    const tbody = document.getElementById("requestsTableBody");
-    const emptyState = document.getElementById("emptyStateRequests");
-    const count = document.getElementById("requestsCount");
-
-    try {
-        const response = await fetch("http://localhost:5000/requests");
-        const data = await response.json();
-
-        if (!data.success || !data.requests) {
-            data.requests = [];
-        }
-
-        // Filter only PARTIAL (approved) requests
-        const approvedRequests = data.requests.filter(r => r.status === "PARTIAL");
-
-        if (approvedRequests.length === 0) {
-            tbody.innerHTML = "";
-            emptyState.classList.remove("hidden");
-            count.textContent = "Showing 0 requests";
-            return;
-        }
-
-        emptyState.classList.add("hidden");
-        tbody.innerHTML = "";
-
-        approvedRequests.forEach((request) => {
-            const priorityClass = getPriorityClass(request.priority_level);
-
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
-                    <td class="px-6 py-4">${request.camp_name || 'N/A'}</td>
-                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
-                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
-                    <td class="px-6 py-4 font-medium">${request.quantity_supplied || 0}</td>
-                    <td class="px-6 py-4 font-medium">${request.remaining_quantity || 0}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium bg-indigo-100 text-indigo-800">${request.status}</span></td>
-                    <td class="px-6 py-4">
-                        <button onclick="openDispatchModal(${request.request_id}, ${request.remaining_quantity})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
-                            Dispatch
-                        </button>
-                    </td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-
-        count.textContent = `Showing ${approvedRequests.length} request${approvedRequests.length !== 1 ? 's' : ''}`;
-
-    } catch (err) {
-        console.error("Error loading requests:", err);
-        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
-    }
-}
-
 function getPriorityClass(priority) {
     switch(priority) {
         case "HIGH":
@@ -812,64 +721,13 @@ function getPriorityClass(priority) {
     }
 }
 
-// ===== DISPATCH MODAL =====
-function openDispatchModal(requestId, qtyNeeded) {
-    document.getElementById("requestIdField").value = requestId;
-    document.getElementById("dispatchQty").max = qtyNeeded;
-    document.getElementById("dispatchQty").value = qtyNeeded;
-    document.getElementById("dispatchRemainingText").textContent = `Maximum remaining supply: ${qtyNeeded}`;
-    document.getElementById("dispatchModal").classList.remove("hidden");
-}
-
-function closeDispatchModal() {
-    document.getElementById("dispatchModal").classList.add("hidden");
-    document.getElementById("dispatchForm").reset();
-}
-
-// ===== DISPATCH FORM =====
-document.getElementById("dispatchForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const requestId = document.getElementById("requestIdField").value;
-    const quantity = parseInt(document.getElementById("dispatchQty").value);
-
-    try {
-        const response = await fetch("http://localhost:5000/dispatch", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                requestId: parseInt(requestId),
-                quantitySupplied: quantity
-            })
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            alert("Resources dispatched successfully!");
-            closeDispatchModal();
-            loadInventory();
-            loadPendingRequests();
-            loadApprovedRequests();
-            loadCompletedRequests();
-            loadDispatchHistory();
-        } else {
-            alert("Error: " + data.message);
-        }
-    } catch (err) {
-        alert("Error dispatching resources");
-        console.error(err);
-    }
-});
-
 // Load on page load
 window.addEventListener("load", () => {
     loadInventoryDetails();
     loadInventory();
     loadPendingRequests();
     loadSupplierFormOptions();
-    loadSupplyHistory();
-    loadDispatchHistory();
-    loadApprovedRequests();
+    loadSupplierOrderStatus();
     loadCompletedRequests();
 });
 </script>

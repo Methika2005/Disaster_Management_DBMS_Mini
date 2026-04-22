@@ -123,40 +123,167 @@
                             <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity</label>
                             <input id="quantityInput" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity" />
                         </div>
+                        <div>
+                            <label class="block text-xs font-bold text-on-surface-variant mb-2">Priority</label>
+                            <select id="prioritySelect" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM" selected>Medium</option>
+                                <option value="LOW">Low</option>
+                            </select>
+                        </div>
                         <button type="submit" class="w-full py-3 bg-secondary text-white rounded-2xl text-sm font-medium hover:opacity-90 transition-opacity">
                             Submit Request
                         </button>
                     </form>
                 </section>
+            </div>
 
-                <section class="bg-white rounded-3xl shadow overflow-hidden">
-                    <div class="p-6 border-b border-slate-200">
-                        <h3 class="text-lg font-semibold text-on-surface">Requests History</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50 border-b border-slate-200">
-                                <tr>
-                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
-                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Resource</th>
-                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
-                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Status</th>
-                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="requestsTableBody" class="divide-y divide-slate-200"></tbody>
-                        </table>
-                    </div>
-                    <div id="requestsEmptyState" class="text-center py-10 text-on-surface-variant hidden">
-                        No requests yet
-                    </div>
-                    <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
-                        <span id="tableCount">Showing 0 requests</span>
-                    </div>
-                </section>
+            <!-- Available Stock for Dispatch -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">inventory_2</span>Available Stock for Dispatch
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Available Stock</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Inventory Fulfillment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dispatchStockBody" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <div id="emptyDispatchStock" class="text-center py-10 text-on-surface-variant hidden">
+                    No stock available for dispatch
+                </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="dispatchStockCount">Showing 0 items</span>
+                </div>
+            </div>
+
+            <!-- Supplies Received History -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">history</span>Supplies Received History
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supply ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dispatchHistoryBody" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <div id="emptyDispatchHistory" class="text-center py-10 text-on-surface-variant hidden">
+                    No supplies received yet
+                </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="dispatchHistoryCount">Showing 0 supply records</span>
+                </div>
+            </div>
+
+            <!-- Camp Stock Dispatch History -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">local_shipping</span>Camp Stock Dispatch History
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Dispatch ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="campDispatchHistoryBody" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+                <div id="emptyCampDispatchHistory" class="text-center py-10 text-on-surface-variant hidden">
+                    No camp stock dispatches yet
+                </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="campDispatchHistoryCount">Showing 0 dispatch records</span>
+                </div>
+            </div>
+
+            <!-- Camp Request Fulfillment Status -->
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">local_shipping</span>Camp Request Fulfillment Status
+                    </h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity Needed</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Supplied</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Remaining</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvedRequestsBody" class="divide-y divide-slate-200">
+                            <!-- Rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyApprovedRequests" class="text-center py-12 hidden">
+                    <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
+                    <p class="text-on-surface-variant text-lg">No camp request fulfillment records yet</p>
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                    <span id="approvedRequestsCount">Showing 0 requests</span>
+                </div>
             </div>
         </div>
     </main>
+</div>
+
+<!-- Dispatch Modal -->
+<div id="dispatchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <h3 class="text-lg font-bold mb-4">Dispatch Camp Stock</h3>
+        <form id="dispatchForm" class="space-y-4">
+            <input type="hidden" id="stockIdField"/>
+            <input type="hidden" id="dispatchResourceNameField"/>
+            <div>
+                <label class="block text-xs font-bold text-on-surface-variant mb-2">Quantity to Dispatch</label>
+                <input id="dispatchQty" type="number" min="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter quantity"/>
+                <p id="dispatchAvailableText" class="mt-2 text-xs text-on-surface-variant"></p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" onclick="closeDispatchModal()" class="flex-1 px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-secondary text-white rounded-lg hover:opacity-90 transition-opacity">Dispatch</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -218,59 +345,21 @@ async function loadCampStock() {
 
 async function loadResources() {
     try {
-        const response = await fetch("http://localhost:5000/resources-simple");
+        const response = await fetch("http://localhost:5000/resources-list");
         const data = await response.json();
 
         const select = document.getElementById("resourceSelect");
         select.innerHTML = '<option value="">-- Choose Resource --</option>';
 
-        data.forEach((resource) => {
+        const resources = data.resources || data;
+        resources.forEach((resource) => {
             const option = document.createElement("option");
             option.value = resource.resource_id;
-            option.textContent = resource.resource_name;
+            option.textContent = resource.unit ? `${resource.resource_name} (${resource.unit})` : resource.resource_name;
             select.appendChild(option);
         });
     } catch (err) {
         console.error("Error loading resources:", err);
-    }
-}
-
-// ===== LOAD MY REQUESTS =====
-async function loadMyRequests() {
-    const tbody = document.getElementById("requestsTableBody");
-    const emptyState = document.getElementById("requestsEmptyState");
-    const tableCount = document.getElementById("tableCount");
-
-    try {
-        const response = await fetch("http://localhost:5000/requests?camp_id=1");
-        const data = await response.json();
-
-        tbody.innerHTML = "";
-        if (!data.success || !data.requests || data.requests.length === 0) {
-            emptyState.classList.remove("hidden");
-            tableCount.textContent = "Showing 0 requests";
-            return;
-        }
-
-        emptyState.classList.add("hidden");
-        data.requests.forEach((request) => {
-            const statusClass = getStatusClass(request.status);
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
-                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
-                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${request.status}</span></td>
-                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(request.request_date).toLocaleDateString()}</td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-
-        tableCount.textContent = `Showing ${data.requests.length} request${data.requests.length !== 1 ? 's' : ''}`;
-    } catch (err) {
-        console.error("Error loading requests:", err);
-        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
     }
 }
 
@@ -293,6 +382,7 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
 
     const resourceId = document.getElementById("resourceSelect").value;
     const quantity = parseInt(document.getElementById("quantityInput").value, 10);
+    const priority = document.getElementById("prioritySelect").value;
 
     if (!resourceId) {
         alert("Please select a resource.");
@@ -305,13 +395,14 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
     }
 
     try {
-        const response = await fetch("http://localhost:5000/request", {
+        const response = await fetch("http://localhost:5000/requests", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                camp_id: 1,
-                resource_id: parseInt(resourceId, 10),
-                quantity: quantity
+                campId: 1,
+                resourceId: parseInt(resourceId, 10),
+                quantityRequired: quantity,
+                priorityLevel: priority
             })
         });
 
@@ -319,7 +410,7 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
         if (data.success) {
             alert("Request submitted successfully!");
             document.getElementById("raiseRequestForm").reset();
-            loadMyRequests();
+            loadApprovedRequests();
         } else {
             alert("Error: " + (data.message || "Unable to submit request."));
         }
@@ -329,11 +420,246 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
     }
 });
 
+// ===== LOAD DISPATCH STOCK =====
+async function loadDispatchStock() {
+    const tbody = document.getElementById("dispatchStockBody");
+    const emptyState = document.getElementById("emptyDispatchStock");
+    const count = document.getElementById("dispatchStockCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/camp-stock");
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 items";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.forEach((stock) => {
+            const resourceName = stock.resource_name || "N/A";
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4">${resourceName}</td>
+                    <td class="px-6 py-4 font-medium">${stock.quantity || 0}</td>
+                    <td class="px-6 py-4">
+                        <button onclick='openDispatchModal(${stock.stock_id}, ${JSON.stringify(resourceName)}, ${stock.quantity || 0})' class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
+                            Dispatch
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${data.length} item${data.length !== 1 ? 's' : ''}`;
+
+    } catch (err) {
+        console.error("Error loading dispatch stock:", err);
+        tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-red-600">Error loading stock</td></tr>';
+    }
+}
+
+// ===== DISPATCH MODAL =====
+function openDispatchModal(stockId, resourceName, availableQty) {
+    document.getElementById("stockIdField").value = stockId;
+    document.getElementById("dispatchResourceNameField").value = resourceName;
+    document.getElementById("dispatchQty").max = availableQty;
+    document.getElementById("dispatchQty").value = "";
+    document.getElementById("dispatchAvailableText").textContent = `Available: ${availableQty} units`;
+    document.getElementById("dispatchModal").classList.remove("hidden");
+}
+
+function closeDispatchModal() {
+    document.getElementById("dispatchModal").classList.add("hidden");
+    document.getElementById("dispatchForm").reset();
+}
+
+// ===== DISPATCH FORM =====
+document.getElementById("dispatchForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const stockId = document.getElementById("stockIdField").value;
+    const resourceName = document.getElementById("dispatchResourceNameField").value;
+    const quantity = parseInt(document.getElementById("dispatchQty").value);
+
+    try {
+        // First, dispatch/reduce the camp stock
+        const response = await fetch("http://localhost:5000/dispatch-camp-stock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                stockId: parseInt(stockId),
+                quantityDispatched: quantity
+            })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            alert(`Successfully dispatched ${quantity} units of ${resourceName}!`);
+            closeDispatchModal();
+            loadCampStock();
+            loadDispatchStock();
+            loadCampStockDispatchHistory();
+        } else {
+            alert("Error: " + (data.message || "Could not dispatch resources"));
+        }
+    } catch (err) {
+        alert("Error dispatching resources");
+        console.error(err);
+    }
+});
+
+async function loadCampStockDispatchHistory() {
+    const tbody = document.getElementById("campDispatchHistoryBody");
+    const emptyState = document.getElementById("emptyCampDispatchHistory");
+    const count = document.getElementById("campDispatchHistoryCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/camp-dispatch-history");
+        const data = await response.json();
+
+        if (!data.success || !data.dispatches || data.dispatches.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 dispatch records";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.dispatches.forEach((dispatch) => {
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${dispatch.dispatch_id}</td>
+                    <td class="px-6 py-4">${dispatch.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${dispatch.quantity_dispatched}</td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(dispatch.dispatch_date).toLocaleDateString()}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${data.dispatches.length} dispatch record${data.dispatches.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading camp stock dispatch history:", err);
+        tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-600">Error loading camp stock dispatch history</td></tr>';
+    }
+}
+
+async function loadDispatchHistory() {
+    const tbody = document.getElementById("dispatchHistoryBody");
+    const emptyState = document.getElementById("emptyDispatchHistory");
+    const count = document.getElementById("dispatchHistoryCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/camp-fulfillment-history");
+        const data = await response.json();
+
+        if (!data.success || !data.deliveries || data.deliveries.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 supply records";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.deliveries.forEach((delivery) => {
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${delivery.fulfillment_id}</td>
+                    <td class="px-6 py-4">#${delivery.request_id}</td>
+                    <td class="px-6 py-4">${delivery.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${delivery.quantity_supplied}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${delivery.fulfillment_status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">${delivery.fulfillment_status}</span></td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(delivery.fulfillment_date).toLocaleDateString()}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${data.deliveries.length} supply record${data.deliveries.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading supplies received history:", err);
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading supplies received history</td></tr>';
+    }
+}
+
+// ===== LOAD REQUEST DISPATCH STATUS =====
+async function loadApprovedRequests() {
+    const tbody = document.getElementById("approvedRequestsBody");
+    const emptyState = document.getElementById("emptyApprovedRequests");
+    const count = document.getElementById("approvedRequestsCount");
+
+    try {
+        const response = await fetch("http://localhost:5000/approved-requests");
+        const data = await response.json();
+
+        if (!data.success || !data.requests || data.requests.length === 0) {
+            tbody.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            count.textContent = "Showing 0 requests";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        tbody.innerHTML = "";
+
+        data.requests.forEach((request) => {
+            const priorityClass = getPriorityClass(request.priority);
+            const statusClass = getStatusClass(request.status);
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
+                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
+                    <td class="px-6 py-4 font-medium text-secondary">${request.quantity_supplied || 0}</td>
+                    <td class="px-6 py-4 font-medium text-amber-600">${request.remaining_quantity || 0}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority || 'N/A'}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${request.status}</span></td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs text-on-surface-variant">${request.remaining_quantity > 0 ? 'Pending from inventory' : 'Completed'}</span>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        count.textContent = `Showing ${data.requests.length} request${data.requests.length !== 1 ? 's' : ''}`;
+    } catch (err) {
+        console.error("Error loading approved requests:", err);
+        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
+    }
+}
+
+function getPriorityClass(priority) {
+    switch(priority) {
+        case "HIGH":
+            return "bg-red-100 text-red-800";
+        case "MEDIUM":
+            return "bg-yellow-100 text-yellow-800";
+        case "LOW":
+            return "bg-green-100 text-green-800";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+}
+
 window.addEventListener("load", () => {
     loadCampDetails();
     loadCampStock();
     loadResources();
-    loadMyRequests();
+    loadDispatchStock();
+    loadCampStockDispatchHistory();
+    loadApprovedRequests();
+    loadDispatchHistory();
 });
 </script>
 </body>
