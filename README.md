@@ -80,8 +80,6 @@ The schema is based on the entities below:
 - `supply`
 - `resource_request`
 - `request_fulfillment`
-
-An additional operational table is also used by the app:
 - `camp_dispatch_history`
 
 The detailed SQL creation/insertion notes are available in [Final_DisasterDatabase.md](/c:/Users/shara/Desktop/Disaster_Management_DBMS_Mini/Final_DisasterDatabase.md).
@@ -115,7 +113,21 @@ The backend reads these environment variables:
 - `DB_USER`
 - `DB_PASSWORD`
 - `DB_NAME`
-- `PORT````
+- `PORT`
+
+If you do not set them, `server.js` falls back to:
+
+```js
+host: "localhost"
+user: "root"
+password: "Srushti@512"
+database: "disaster_relief_db_final"
+port: 5000
+```
+
+You can either:
+- keep the defaults in your local environment, or
+- set your own environment variables before starting the server
 
 Example in PowerShell:
 
