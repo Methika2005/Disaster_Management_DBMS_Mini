@@ -27,8 +27,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background:
-                linear-gradient(180deg, #f6f8fc 0%, #eef4f8 100%);
+            background: linear-gradient(180deg, #f6f8fc 0%, #eef4f8 100%);
         }
         h1, h2, h3 { font-family: 'Manrope', sans-serif; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400; }
@@ -94,11 +93,10 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface">
-<!-- Header -->
 <header class="bg-white/95 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-4">
         <h1 class="text-2xl font-extrabold text-primary">Equilibrium Relief</h1>
-        <span class="text-sm text-on-surface-variant">Camp Manager</span>
+        <span id="headerRoleLabel" class="text-sm text-on-surface-variant">Camp Manager</span>
     </div>
     <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-all flex items-center gap-2 shadow-sm">
         <span class="material-symbols-outlined">logout</span>Logout
@@ -106,12 +104,11 @@
 </header>
 
 <div class="flex min-h-screen">
-    <!-- Sidebar -->
     <aside class="w-full lg:w-80 border-r border-slate-200 p-6">
         <div class="mb-8">
-            <p class="text-xs uppercase tracking-[0.3em] text-on-surface-variant">Camp Manager</p>
-            <h2 class="mt-3 text-2xl font-extrabold text-primary">camp@sys.com</h2>
-            <p class="mt-2 text-sm text-on-surface-variant">Logged in as camp manager</p>
+            <p id="sidebarRoleLabel" class="text-xs uppercase tracking-[0.3em] text-on-surface-variant">Camp Manager</p>
+            <h2 id="userEmail" class="mt-3 text-2xl font-extrabold text-primary">camp@sys.com</h2>
+            <p id="sidebarRoleDescription" class="mt-2 text-sm text-on-surface-variant">Logged in as camp manager</p>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">
@@ -141,19 +138,18 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 overflow-auto p-8">
         <div class="max-w-7xl mx-auto space-y-6">
             <div class="rounded-lg border border-primary/10 bg-white/70 px-6 py-5 shadow-sm">
                 <h2 class="text-3xl font-extrabold text-on-surface mb-2">Camp Resource Dashboard</h2>
-                <p class="text-on-surface-variant">Review stock and request resources for your camp.</p>
+                <p class="text-on-surface-variant">Review stock, raise requests, and track dispatch activity for your camp.</p>
             </div>
 
             <section class="bg-white rounded-lg shadow p-6">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                     <div>
                         <h3 class="text-lg font-semibold text-on-surface">Camp Stock</h3>
-                        <p class="text-sm text-on-surface-variant">Current stock for camp #1</p>
+                        <p id="campStockSubtitle" class="text-sm text-on-surface-variant">Current stock for selected camp</p>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -172,8 +168,8 @@
                 </div>
             </section>
 
-            <div class="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
-                <section class="bg-white rounded-lg shadow p-6">
+            <div id="requestAndHistoryGrid" class="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
+                <section id="requestFormSection" class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-on-surface mb-4">Request Resources</h3>
                     <form id="raiseRequestForm" class="space-y-4">
                         <div>
@@ -199,10 +195,35 @@
                         </button>
                     </form>
                 </section>
+
+                <section class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6 border-b border-slate-200">
+                        <h3 class="text-lg font-semibold text-on-surface">Requests History</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Resource</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase text-on-surface-variant">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestsTableBody" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                    <div id="requestsEmptyState" class="text-center py-10 text-on-surface-variant hidden">
+                        No requests yet
+                    </div>
+                    <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
+                        <span id="tableCount">Showing 0 requests</span>
+                    </div>
+                </section>
             </div>
 
-            <!-- Available Stock for Dispatch -->
-            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+            <div id="dispatchStockSection" class="bg-white rounded-lg shadow overflow-hidden mb-8">
                 <div class="px-6 py-4 border-b border-slate-200">
                     <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">inventory_2</span>Available Stock for Dispatch
@@ -228,7 +249,6 @@
                 </div>
             </div>
 
-            <!-- Supplies Received History -->
             <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
                 <div class="px-6 py-4 border-b border-slate-200">
                     <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
@@ -258,7 +278,6 @@
                 </div>
             </div>
 
-            <!-- Camp Stock Dispatch History -->
             <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
                 <div class="px-6 py-4 border-b border-slate-200">
                     <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
@@ -286,14 +305,12 @@
                 </div>
             </div>
 
-            <!-- Camp Request Fulfillment Status -->
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-200">
                     <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">local_shipping</span>Camp Request Fulfillment Status
                     </h3>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-slate-200">
@@ -308,19 +325,13 @@
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="approvedRequestsBody" class="divide-y divide-slate-200">
-                            <!-- Rows will be inserted here -->
-                        </tbody>
+                        <tbody id="approvedRequestsBody" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
-
-                <!-- Empty State -->
                 <div id="emptyApprovedRequests" class="text-center py-12 hidden">
                     <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
                     <p class="text-on-surface-variant text-lg">No camp request fulfillment records yet</p>
                 </div>
-
-                <!-- Footer -->
                 <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
                     <span id="approvedRequestsCount">Showing 0 requests</span>
                 </div>
@@ -329,7 +340,6 @@
     </main>
 </div>
 
-<!-- Dispatch Modal -->
 <div id="dispatchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-lg max-w-md w-full p-6">
         <h3 class="text-lg font-bold mb-4">Dispatch Camp Stock</h3>
@@ -343,21 +353,100 @@
             </div>
             <div class="flex gap-2">
                 <button type="button" onclick="closeDispatchModal()" class="flex-1 px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-secondary text-white rounded-lg hover:opacity-90 transition-opacity">Dispatch</button>
+                <button id="dispatchSubmitButton" type="submit" class="flex-1 px-4 py-2 bg-secondary text-white rounded-lg hover:opacity-90 transition-opacity">Dispatch</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
+const urlParams = new URLSearchParams(window.location.search);
+const campId = urlParams.get("camp_id") || "4";
+const readOnlyMode = urlParams.get("readOnly") === "true";
+const isLoggedIn = localStorage.getItem("isLoggedIn");
+const userRole = localStorage.getItem("userRole");
+const isAdminReadOnlyView = readOnlyMode && isLoggedIn === "true" && userRole === "Admin";
+
+function applyRoleLabels() {
+    const userEmail = localStorage.getItem("userEmail");
+    const headerRoleLabel = document.getElementById("headerRoleLabel");
+    const sidebarRoleLabel = document.getElementById("sidebarRoleLabel");
+    const sidebarRoleDescription = document.getElementById("sidebarRoleDescription");
+    const userEmailElement = document.getElementById("userEmail");
+
+    if (isAdminReadOnlyView) {
+        headerRoleLabel.textContent = "Admin";
+        sidebarRoleLabel.textContent = "Administrator";
+        sidebarRoleDescription.textContent = "Logged in as admin";
+    }
+
+    if (userEmail) {
+        userEmailElement.textContent = userEmail;
+    }
+}
+
 function logout() {
     window.location.href = "login.html";
 }
 
-// ===== LOAD CAMP DETAILS =====
+function getStatusClass(status) {
+    switch (status) {
+        case "PENDING":
+            return "bg-yellow-100 text-yellow-800";
+        case "PARTIAL":
+            return "bg-blue-100 text-blue-800";
+        case "COMPLETED":
+            return "bg-green-100 text-green-800";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+}
+
+function getPriorityClass(priority) {
+    switch (priority) {
+        case "HIGH":
+            return "bg-red-100 text-red-800";
+        case "MEDIUM":
+            return "bg-yellow-100 text-yellow-800";
+        case "LOW":
+            return "bg-green-100 text-green-800";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+}
+
+function applyReadOnlyState() {
+    if (!readOnlyMode) {
+        return;
+    }
+
+    const pageHeaderDiv = document.querySelector("main > div > div:first-child");
+    if (pageHeaderDiv && pageHeaderDiv.nextSibling) {
+        const banner = document.createElement("div");
+        banner.className = "bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded";
+        banner.innerHTML = "<strong>Read-Only Mode:</strong> You are viewing this camp as an admin. Changes cannot be made.";
+        pageHeaderDiv.parentNode.insertBefore(banner, pageHeaderDiv.nextSibling);
+    }
+
+    const requestFormSection = document.getElementById("requestFormSection");
+    if (requestFormSection) {
+        requestFormSection.style.display = "none";
+    }
+
+    const dispatchStockSection = document.getElementById("dispatchStockSection");
+    if (dispatchStockSection) {
+        dispatchStockSection.style.display = "none";
+    }
+
+    const grid = document.getElementById("requestAndHistoryGrid");
+    if (grid) {
+        grid.className = "gap-6";
+    }
+}
+
 async function loadCampDetails() {
     try {
-        const res = await fetch("http://localhost:5000/camp-details");
+        const res = await fetch(`http://localhost:5000/camp-details?camp_id=${campId}`);
         const data = await res.json();
 
         document.getElementById("campName").textContent = data.camp_name || "N/A";
@@ -365,19 +454,18 @@ async function loadCampDetails() {
         document.getElementById("campArea").textContent = data.area_name || "N/A";
         document.getElementById("campDisaster").textContent = data.disaster_type || "N/A";
         document.getElementById("campCapacity").textContent = data.capacity || "N/A";
-
+        document.getElementById("campStockSubtitle").textContent = `Current stock for camp #${campId}`;
     } catch (err) {
         console.error("Error loading camp details:", err);
     }
 }
 
-// ===== LOAD CAMP STOCK =====
 async function loadCampStock() {
     const tbody = document.getElementById("stockTableBody");
     const emptyState = document.getElementById("stockEmptyState");
 
     try {
-        const response = await fetch("http://localhost:5000/camp-stock");
+        const response = await fetch(`http://localhost:5000/camp-stock?camp_id=${campId}`);
         const data = await response.json();
 
         tbody.innerHTML = "";
@@ -398,23 +486,20 @@ async function loadCampStock() {
             `;
             tbody.innerHTML += row;
         });
-
     } catch (err) {
         console.error("Error loading stock:", err);
     }
 }
 
-// ===== LOAD RESOURCES FOR DROPDOWN =====
-
 async function loadResources() {
     try {
         const response = await fetch("http://localhost:5000/resources-list");
         const data = await response.json();
-
         const select = document.getElementById("resourceSelect");
+        const resources = data.resources || data;
+
         select.innerHTML = '<option value="">-- Choose Resource --</option>';
 
-        const resources = data.resources || data;
         resources.forEach((resource) => {
             const option = document.createElement("option");
             option.value = resource.resource_id;
@@ -426,22 +511,52 @@ async function loadResources() {
     }
 }
 
-function getStatusClass(status) {
-    switch (status) {
-        case "PENDING":
-            return "bg-yellow-100 text-yellow-800";
-        case "PARTIAL":
-            return "bg-blue-100 text-blue-800";
-        case "COMPLETED":
-            return "bg-green-100 text-green-800";
-        default:
-            return "bg-gray-100 text-gray-800";
+async function loadMyRequests() {
+    const tbody = document.getElementById("requestsTableBody");
+    const emptyState = document.getElementById("requestsEmptyState");
+    const tableCount = document.getElementById("tableCount");
+
+    try {
+        const response = await fetch(`http://localhost:5000/requests?camp_id=${campId}`);
+        const data = await response.json();
+
+        tbody.innerHTML = "";
+
+        if (!data.success || !data.requests || data.requests.length === 0) {
+            emptyState.classList.remove("hidden");
+            tableCount.textContent = "Showing 0 requests";
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        data.requests.forEach((request) => {
+            const statusClass = getStatusClass(request.status);
+            const row = `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
+                    <td class="px-6 py-4">${request.resource_name || "N/A"}</td>
+                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${request.status}</span></td>
+                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(request.request_date).toLocaleDateString()}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        tableCount.textContent = `Showing ${data.requests.length} request${data.requests.length !== 1 ? "s" : ""}`;
+    } catch (err) {
+        console.error("Error loading requests:", err);
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
     }
 }
 
-// ===== RAISE REQUEST FORM =====
 document.getElementById("raiseRequestForm").addEventListener("submit", async function(e) {
     e.preventDefault();
+
+    if (readOnlyMode) {
+        alert("Read-only mode: Cannot create requests");
+        return;
+    }
 
     const resourceId = document.getElementById("resourceSelect").value;
     const quantity = parseInt(document.getElementById("quantityInput").value, 10);
@@ -462,7 +577,7 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                campId: 1,
+                campId: parseInt(campId, 10),
                 resourceId: parseInt(resourceId, 10),
                 quantityRequired: quantity,
                 priorityLevel: priority
@@ -473,6 +588,7 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
         if (data.success) {
             alert("Request submitted successfully!");
             document.getElementById("raiseRequestForm").reset();
+            loadMyRequests();
             loadApprovedRequests();
         } else {
             alert("Error: " + (data.message || "Unable to submit request."));
@@ -483,14 +599,13 @@ document.getElementById("raiseRequestForm").addEventListener("submit", async fun
     }
 });
 
-// ===== LOAD DISPATCH STOCK =====
 async function loadDispatchStock() {
     const tbody = document.getElementById("dispatchStockBody");
     const emptyState = document.getElementById("emptyDispatchStock");
     const count = document.getElementById("dispatchStockCount");
 
     try {
-        const response = await fetch("http://localhost:5000/camp-stock");
+        const response = await fetch(`http://localhost:5000/camp-stock?camp_id=${campId}`);
         const data = await response.json();
 
         if (!data || data.length === 0) {
@@ -505,12 +620,16 @@ async function loadDispatchStock() {
 
         data.forEach((stock) => {
             const resourceName = stock.resource_name || "N/A";
+            const buttonClass = readOnlyMode
+                ? "px-3 py-1 bg-gray-300 text-gray-500 rounded text-xs font-medium cursor-not-allowed opacity-50"
+                : "px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity";
+
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4">${resourceName}</td>
                     <td class="px-6 py-4 font-medium">${stock.quantity || 0}</td>
                     <td class="px-6 py-4">
-                        <button onclick='openDispatchModal(${stock.stock_id}, ${JSON.stringify(resourceName)}, ${stock.quantity || 0})' class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
+                        <button onclick='openDispatchModal(${stock.stock_id}, ${JSON.stringify(resourceName)}, ${stock.quantity || 0})' class="${buttonClass}" ${readOnlyMode ? "disabled" : ""}>
                             Dispatch
                         </button>
                     </td>
@@ -519,16 +638,19 @@ async function loadDispatchStock() {
             tbody.innerHTML += row;
         });
 
-        count.textContent = `Showing ${data.length} item${data.length !== 1 ? 's' : ''}`;
-
+        count.textContent = `Showing ${data.length} item${data.length !== 1 ? "s" : ""}`;
     } catch (err) {
         console.error("Error loading dispatch stock:", err);
         tbody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-red-600">Error loading stock</td></tr>';
     }
 }
 
-// ===== DISPATCH MODAL =====
 function openDispatchModal(stockId, resourceName, availableQty) {
+    if (readOnlyMode) {
+        alert("Read-only mode: Cannot dispatch resources");
+        return;
+    }
+
     document.getElementById("stockIdField").value = stockId;
     document.getElementById("dispatchResourceNameField").value = resourceName;
     document.getElementById("dispatchQty").max = availableQty;
@@ -542,22 +664,26 @@ function closeDispatchModal() {
     document.getElementById("dispatchForm").reset();
 }
 
-// ===== DISPATCH FORM =====
 document.getElementById("dispatchForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
+    if (readOnlyMode) {
+        alert("Read-only mode: Cannot dispatch resources");
+        return;
+    }
+
     const stockId = document.getElementById("stockIdField").value;
     const resourceName = document.getElementById("dispatchResourceNameField").value;
-    const quantity = parseInt(document.getElementById("dispatchQty").value);
+    const quantity = parseInt(document.getElementById("dispatchQty").value, 10);
 
     try {
-        // First, dispatch/reduce the camp stock
         const response = await fetch("http://localhost:5000/dispatch-camp-stock", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                stockId: parseInt(stockId),
-                quantityDispatched: quantity
+                stockId: parseInt(stockId, 10),
+                quantityDispatched: quantity,
+                campId: parseInt(campId, 10)
             })
         });
 
@@ -583,7 +709,7 @@ async function loadCampStockDispatchHistory() {
     const count = document.getElementById("campDispatchHistoryCount");
 
     try {
-        const response = await fetch("http://localhost:5000/camp-dispatch-history");
+        const response = await fetch(`http://localhost:5000/camp-dispatch-history?camp_id=${campId}`);
         const data = await response.json();
 
         if (!data.success || !data.dispatches || data.dispatches.length === 0) {
@@ -600,7 +726,7 @@ async function loadCampStockDispatchHistory() {
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${dispatch.dispatch_id}</td>
-                    <td class="px-6 py-4">${dispatch.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${dispatch.resource_name || "N/A"}</td>
                     <td class="px-6 py-4 font-medium">${dispatch.quantity_dispatched}</td>
                     <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(dispatch.dispatch_date).toLocaleDateString()}</td>
                 </tr>
@@ -608,7 +734,7 @@ async function loadCampStockDispatchHistory() {
             tbody.innerHTML += row;
         });
 
-        count.textContent = `Showing ${data.dispatches.length} dispatch record${data.dispatches.length !== 1 ? 's' : ''}`;
+        count.textContent = `Showing ${data.dispatches.length} dispatch record${data.dispatches.length !== 1 ? "s" : ""}`;
     } catch (err) {
         console.error("Error loading camp stock dispatch history:", err);
         tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-600">Error loading camp stock dispatch history</td></tr>';
@@ -621,7 +747,7 @@ async function loadDispatchHistory() {
     const count = document.getElementById("dispatchHistoryCount");
 
     try {
-        const response = await fetch("http://localhost:5000/camp-fulfillment-history");
+        const response = await fetch(`http://localhost:5000/camp-fulfillment-history?camp_id=${campId}`);
         const data = await response.json();
 
         if (!data.success || !data.deliveries || data.deliveries.length === 0) {
@@ -635,34 +761,36 @@ async function loadDispatchHistory() {
         tbody.innerHTML = "";
 
         data.deliveries.forEach((delivery) => {
+            const statusClass = delivery.fulfillment_status === "COMPLETED"
+                ? "bg-green-100 text-green-800"
+                : "bg-blue-100 text-blue-800";
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${delivery.fulfillment_id}</td>
                     <td class="px-6 py-4">#${delivery.request_id}</td>
-                    <td class="px-6 py-4">${delivery.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${delivery.resource_name || "N/A"}</td>
                     <td class="px-6 py-4 font-medium">${delivery.quantity_supplied}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${delivery.fulfillment_status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">${delivery.fulfillment_status}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${delivery.fulfillment_status}</span></td>
                     <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(delivery.fulfillment_date).toLocaleDateString()}</td>
                 </tr>
             `;
             tbody.innerHTML += row;
         });
 
-        count.textContent = `Showing ${data.deliveries.length} supply record${data.deliveries.length !== 1 ? 's' : ''}`;
+        count.textContent = `Showing ${data.deliveries.length} supply record${data.deliveries.length !== 1 ? "s" : ""}`;
     } catch (err) {
         console.error("Error loading supplies received history:", err);
         tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Error loading supplies received history</td></tr>';
     }
 }
 
-// ===== LOAD REQUEST DISPATCH STATUS =====
 async function loadApprovedRequests() {
     const tbody = document.getElementById("approvedRequestsBody");
     const emptyState = document.getElementById("emptyApprovedRequests");
     const count = document.getElementById("approvedRequestsCount");
 
     try {
-        const response = await fetch("http://localhost:5000/approved-requests");
+        const response = await fetch(`http://localhost:5000/approved-requests?camp_id=${campId}`);
         const data = await response.json();
 
         if (!data.success || !data.requests || data.requests.length === 0) {
@@ -678,47 +806,38 @@ async function loadApprovedRequests() {
         data.requests.forEach((request) => {
             const priorityClass = getPriorityClass(request.priority);
             const statusClass = getStatusClass(request.status);
+            const actionText = Number(request.remaining_quantity) > 0 ? "Pending from inventory" : "Completed";
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
-                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
+                    <td class="px-6 py-4">${request.resource_name || "N/A"}</td>
                     <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
                     <td class="px-6 py-4 font-medium text-secondary">${request.quantity_supplied || 0}</td>
                     <td class="px-6 py-4 font-medium text-amber-600">${request.remaining_quantity || 0}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority || 'N/A'}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority || "N/A"}</span></td>
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${request.status}</span></td>
                     <td class="px-6 py-4">
-                        <span class="text-xs text-on-surface-variant">${request.remaining_quantity > 0 ? 'Pending from inventory' : 'Completed'}</span>
+                        <span class="text-xs text-on-surface-variant">${actionText}</span>
                     </td>
                 </tr>
             `;
             tbody.innerHTML += row;
         });
 
-        count.textContent = `Showing ${data.requests.length} request${data.requests.length !== 1 ? 's' : ''}`;
+        count.textContent = `Showing ${data.requests.length} request${data.requests.length !== 1 ? "s" : ""}`;
     } catch (err) {
         console.error("Error loading approved requests:", err);
         tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
     }
 }
 
-function getPriorityClass(priority) {
-    switch(priority) {
-        case "HIGH":
-            return "bg-red-100 text-red-800";
-        case "MEDIUM":
-            return "bg-yellow-100 text-yellow-800";
-        case "LOW":
-            return "bg-green-100 text-green-800";
-        default:
-            return "bg-gray-100 text-gray-800";
-    }
-}
-
 window.addEventListener("load", () => {
+    applyRoleLabels();
+    applyReadOnlyState();
     loadCampDetails();
     loadCampStock();
     loadResources();
+    loadMyRequests();
     loadDispatchStock();
     loadCampStockDispatchHistory();
     loadApprovedRequests();

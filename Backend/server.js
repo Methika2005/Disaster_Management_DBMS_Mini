@@ -11,7 +11,7 @@ app.use(express.json());
 const db = mysql.createConnection({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "Srushti@512",
+    password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_NAME || "disaster_relief_db_final"
 });
 
@@ -24,28 +24,6 @@ db.connect((err) => {
 });
 
 const dbPromise = db.promise();
-
-async function ensureSupplyStatusColumn() {
-    try {
-        const databaseName = process.env.DB_NAME || "disaster_relief_db_final";
-        const [rows] = await dbPromise.query(
-            `SELECT COLUMN_NAME FROM information_schema.columns
-             WHERE table_schema = ? AND table_name = 'supply' AND column_name = 'status'`,
-            [databaseName]
-        );
-
-        if (rows.length === 0) {
-            console.log("Adding missing supply.status column...");
-            await dbPromise.query(
-                `ALTER TABLE supply ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'PENDING'`
-            );
-        }
-    } catch (err) {
-        console.error("Error ensuring supply.status column:", err.message);
-    }
-}
-
-ensureSupplyStatusColumn();
 
 async function ensureSupplyPriorityColumn() {
     try {
@@ -411,7 +389,7 @@ app.get("/resources-list", async (req, res) => {
 
 // ===== CAMP DETAILS =====
 app.get("/camp-details", async (req, res) => {
-    const campId = 1;
+    const campId = parseInt(req.query.camp_id, 10) || 4;
     try {
         const [rows] = await dbPromise.query(
             `SELECT
@@ -439,7 +417,7 @@ app.get("/camp-details", async (req, res) => {
 
 // ===== CAMP STOCK =====
 app.get("/camp-stock", async (req, res) => {
-    const campId = 1;   
+    const campId = parseInt(req.query.camp_id, 10) || 4;
     try {
         const [rows] = await dbPromise.query(
             `SELECT cs.stock_id,
@@ -460,7 +438,7 @@ app.get("/camp-stock", async (req, res) => {
 
 // ===== CAMP DISPATCH HISTORY =====
 app.get("/camp-dispatch-history", async (req, res) => {
-    const campId = 1;
+    const campId = parseInt(req.query.camp_id, 10) || 4;
     try {
         const [rows] = await dbPromise.query(
             `SELECT dispatch_id,
@@ -484,7 +462,7 @@ app.get("/camp-dispatch-history", async (req, res) => {
 
 // ===== CAMP FULFILLMENT HISTORY FROM INVENTORY DISPATCHES =====
 app.get("/camp-fulfillment-history", async (req, res) => {
-    const campId = 1;
+    const campId = parseInt(req.query.camp_id, 10) || 4;
     try {
         const [rows] = await dbPromise.query(
             `SELECT rf.fulfillment_id,
@@ -502,6 +480,165 @@ app.get("/camp-fulfillment-history", async (req, res) => {
         );
 
         res.json({ success: true, deliveries: rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ===== ADMIN TODAY ACTIVITY DASHBOARD =====
+app.get("/admin/today-activity", async (req, res) => {
+    try {
+        const [todayResult, campRequestsResult, inventoryDispatchesResult, inventoryOrdersResult, supplierDeliveriesResult] = await Promise.all([
+            dbPromise.query(`SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d') AS today`),
+            dbPromise.query(
+                `SELECT rr.request_id AS reference_id,
+                        rr.request_date AS activity_date,
+                        rc.name AS actor_name,
+                        r.resource_name,
+                        rr.quantity_required,
+                        rr.priority_level,
+                        rr.status
+                 FROM resource_request rr
+                 LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id
+                 LEFT JOIN resource r ON rr.resource_id = r.resource_id
+                 WHERE rr.request_date = CURDATE()
+                 ORDER BY rr.request_id DESC`
+            ),
+            dbPromise.query(
+                `SELECT rf.fulfillment_id AS reference_id,
+                        rf.fulfillment_date AS activity_date,
+                        rc.name AS camp_name,
+                        r.resource_name,
+                        rr.quantity_required,
+                        rf.quantity_supplied,
+                        rf.fulfillment_status
+                 FROM request_fulfillment rf
+                 LEFT JOIN resource_request rr ON rf.request_id = rr.request_id
+                 LEFT JOIN relief_camp rc ON rr.camp_id = rc.camp_id
+                 LEFT JOIN resource r ON rr.resource_id = r.resource_id
+                 WHERE rf.fulfillment_date = CURDATE()
+                 ORDER BY rf.fulfillment_id DESC`
+            ),
+            dbPromise.query(
+                `SELECT sp.supply_id AS reference_id,
+                        sp.supply_date AS activity_date,
+                        ci.name AS inventory_name,
+                        sup.supplier_name,
+                        r.resource_name,
+                        sp.quantity_supplied,
+                        sp.priority_level,
+                        sp.status
+                 FROM supply sp
+                 LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
+                 LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
+                 LEFT JOIN resource r ON sp.resource_id = r.resource_id
+                 WHERE sp.supply_date = CURDATE()
+                 ORDER BY sp.supply_id DESC`
+            ),
+            dbPromise.query(
+                `SELECT sp.supply_id AS reference_id,
+                        sp.supply_date AS activity_date,
+                        sup.supplier_name,
+                        ci.name AS inventory_name,
+                        r.resource_name,
+                        sp.quantity_supplied,
+                        sp.priority_level
+                 FROM supply sp
+                 LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
+                 LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
+                 LEFT JOIN resource r ON sp.resource_id = r.resource_id
+                 WHERE sp.status = 'APPROVED' AND sp.supply_date = CURDATE()
+                 ORDER BY sp.supply_id DESC`
+            )
+        ]);
+
+        const campRequests = campRequestsResult[0];
+        const inventoryDispatches = inventoryDispatchesResult[0];
+        const inventoryOrders = inventoryOrdersResult[0];
+        const supplierDeliveries = supplierDeliveriesResult[0];
+        const today = todayResult[0][0].today;
+
+        const campManagerActivities = campRequests.map((row) => ({
+            referenceId: row.reference_id,
+            referenceLabel: `REQ-${row.reference_id}`,
+            actorName: row.actor_name || "Unknown Camp",
+            activityDate: row.activity_date,
+            action: "Raised request",
+            detail: `${row.quantity_required} ${row.resource_name || "resource"} requested`,
+            meta: `Priority ${row.priority_level || "MEDIUM"}`,
+            status: row.status || "PENDING"
+        }));
+
+        const inventoryDispatchActivities = inventoryDispatches.map((row) => ({
+            referenceId: row.reference_id,
+            referenceLabel: `FUL-${row.reference_id}`,
+            actorName: "Inventory Manager",
+            activityDate: row.activity_date,
+            action: "Dispatched resources",
+            detail: `${row.quantity_supplied} ${row.resource_name || "resource"} sent to ${row.camp_name || "camp"}`,
+            meta: `Against request for ${row.quantity_required || 0}`,
+            status: row.fulfillment_status || "PARTIAL"
+        }));
+
+        const inventoryOrderActivities = inventoryOrders.map((row) => ({
+            referenceId: row.reference_id,
+            referenceLabel: `SUP-${row.reference_id}`,
+            actorName: row.inventory_name || "Inventory",
+            activityDate: row.activity_date,
+            action: "Raised supplier order",
+            detail: `${row.quantity_supplied} ${row.resource_name || "resource"} from ${row.supplier_name || "supplier"}`,
+            meta: `Priority ${row.priority_level || "MEDIUM"}`,
+            status: row.status || "PENDING"
+        }));
+
+        const inventoryManagerActivities = [...inventoryDispatchActivities, ...inventoryOrderActivities]
+            .sort((a, b) => b.referenceId - a.referenceId);
+
+        const supplierActivities = supplierDeliveries.map((row) => ({
+            referenceId: row.reference_id,
+            referenceLabel: `SUP-${row.reference_id}`,
+            actorName: row.supplier_name || "Supplier",
+            activityDate: row.activity_date,
+            action: "Completed delivery",
+            detail: `${row.quantity_supplied} ${row.resource_name || "resource"} delivered to ${row.inventory_name || "inventory"}`,
+            meta: `Priority ${row.priority_level || "MEDIUM"}`,
+            status: "APPROVED"
+        }));
+
+        const feed = [
+            ...campManagerActivities.map((item) => ({ role: "Camp Manager", sortGroup: 3, ...item })),
+            ...inventoryManagerActivities.map((item) => ({ role: "Inventory Manager", sortGroup: 2, ...item })),
+            ...supplierActivities.map((item) => ({ role: "Supplier", sortGroup: 1, ...item }))
+        ].sort((a, b) => {
+            if (b.sortGroup !== a.sortGroup) {
+                return b.sortGroup - a.sortGroup;
+            }
+            return b.referenceId - a.referenceId;
+        });
+
+        const totalRequestedUnits = campRequests.reduce((sum, row) => sum + Number(row.quantity_required || 0), 0);
+        const totalDispatchedUnits = inventoryDispatches.reduce((sum, row) => sum + Number(row.quantity_supplied || 0), 0);
+        const totalDeliveredUnits = supplierDeliveries.reduce((sum, row) => sum + Number(row.quantity_supplied || 0), 0);
+
+        res.json({
+            success: true,
+            today,
+            summary: {
+                totalActivities: feed.length,
+                campManagerActions: campManagerActivities.length,
+                inventoryManagerActions: inventoryManagerActivities.length,
+                supplierActions: supplierActivities.length,
+                totalRequestedUnits,
+                totalDispatchedUnits,
+                totalDeliveredUnits
+            },
+            roleSections: {
+                campManagers: campManagerActivities,
+                inventoryManagers: inventoryManagerActivities,
+                suppliers: supplierActivities
+            },
+            feed
+        });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -566,7 +703,7 @@ app.get("/camp-requests/:campId", async (req, res) => {
 
 // ===== GET CAMP REQUESTS READY FOR FULFILLMENT =====
 app.get("/approved-requests", async (req, res) => {
-    const campId = 1;
+    const campId = parseInt(req.query.camp_id, 10) || 4;
     try {
         const [rows] = await dbPromise.query(
             `SELECT rr.request_id,
@@ -829,23 +966,31 @@ app.get("/supply", async (req, res) => {
 });
 
 app.get("/supplier-orders", async (req, res) => {
+    const supplierId = parseInt(req.query.supplier_id, 10);
     try {
-        const [rows] = await dbPromise.query(
-            `SELECT sp.supply_id,
-                    sp.supply_date,
-                    sp.quantity_supplied,
-                    sp.priority_level,
-                    r.resource_name,
-                    ci.name AS inventory_name,
-                    sup.supplier_name,
-                    'PENDING' AS order_status
-             FROM supply sp
-             LEFT JOIN resource r ON sp.resource_id = r.resource_id
-             LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
-             LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
-             WHERE sp.status = 'PENDING'
-             ORDER BY FIELD(sp.priority_level, 'HIGH', 'MEDIUM', 'LOW'), sp.supply_date ASC, sp.supply_id ASC`
-        );
+        let query = `SELECT sp.supply_id,
+                            sp.supply_date,
+                            sp.quantity_supplied,
+                            sp.priority_level,
+                            r.resource_name,
+                            ci.name AS inventory_name,
+                            sup.supplier_name,
+                            'PENDING' AS order_status
+                     FROM supply sp
+                     LEFT JOIN resource r ON sp.resource_id = r.resource_id
+                     LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
+                     LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
+                     WHERE sp.status = 'PENDING'`;
+        const params = [];
+
+        if (supplierId) {
+            query += " AND sp.supplier_id = ?";
+            params.push(supplierId);
+        }
+
+        query += " ORDER BY FIELD(sp.priority_level, 'HIGH', 'MEDIUM', 'LOW'), sp.supply_date ASC, sp.supply_id ASC";
+
+        const [rows] = await dbPromise.query(query, params);
         res.json({ success: true, orders: rows });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -853,23 +998,31 @@ app.get("/supplier-orders", async (req, res) => {
 });
 
 app.get("/supplier-deliveries", async (req, res) => {
+    const supplierId = parseInt(req.query.supplier_id, 10);
     try {
-        const [rows] = await dbPromise.query(
-            `SELECT sp.supply_id,
-                    sp.supply_date,
-                    sp.quantity_supplied,
-                    sp.priority_level,
-                    r.resource_name,
-                    ci.name AS inventory_name,
-                    sup.supplier_name,
-                    'APPROVED' AS order_status
-             FROM supply sp
-             LEFT JOIN resource r ON sp.resource_id = r.resource_id
-             LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
-             LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
-             WHERE sp.status = 'APPROVED'
-             ORDER BY sp.supply_date DESC`
-        );
+        let query = `SELECT sp.supply_id,
+                            sp.supply_date,
+                            sp.quantity_supplied,
+                            sp.priority_level,
+                            r.resource_name,
+                            ci.name AS inventory_name,
+                            sup.supplier_name,
+                            'APPROVED' AS order_status
+                     FROM supply sp
+                     LEFT JOIN resource r ON sp.resource_id = r.resource_id
+                     LEFT JOIN central_inventory ci ON sp.inventory_id = ci.inventory_id
+                     LEFT JOIN supplier sup ON sp.supplier_id = sup.supplier_id
+                     WHERE sp.status = 'APPROVED'`;
+        const params = [];
+
+        if (supplierId) {
+            query += " AND sp.supplier_id = ?";
+            params.push(supplierId);
+        }
+
+        query += " ORDER BY sp.supply_date DESC";
+
+        const [rows] = await dbPromise.query(query, params);
         res.json({ success: true, deliveries: rows });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -1008,11 +1161,14 @@ app.get("/resources", async (req, res) => {
 
 // ===== DISPATCH FROM CAMP STOCK (Camp Manager) =====
 app.post("/dispatch-camp-stock", async (req, res) => {
-    const { stockId, quantityDispatched } = req.body;
-    const campId = 1; // Assuming camp manager is working with camp 1
+    const { stockId, quantityDispatched, campId } = req.body;
+    const activeCampId = parseInt(campId, 10) || 4;
     
     try {
-        if (!stockId || !quantityDispatched) {
+        const parsedStockId = parseInt(stockId, 10);
+        const parsedQuantity = parseInt(quantityDispatched, 10);
+
+        if (!parsedStockId || !parsedQuantity || parsedQuantity <= 0) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
@@ -1022,7 +1178,7 @@ app.post("/dispatch-camp-stock", async (req, res) => {
              FROM camp_stock cs
              LEFT JOIN resource r ON cs.resource_id = r.resource_id
              WHERE cs.stock_id = ? AND cs.camp_id = ?`,
-            [stockId, campId]
+            [parsedStockId, activeCampId]
         );
 
         if (stocks.length === 0) {
@@ -1032,7 +1188,7 @@ app.post("/dispatch-camp-stock", async (req, res) => {
         const stock = stocks[0];
 
         // Check if sufficient quantity available
-        if (stock.quantity_available < quantityDispatched) {
+        if (Number(stock.quantity_available) < parsedQuantity) {
             return res.status(400).json({ 
                 success: false, 
                 message: "Insufficient stock. Available: " + stock.quantity_available 
@@ -1040,10 +1196,10 @@ app.post("/dispatch-camp-stock", async (req, res) => {
         }
 
         // Reduce camp stock
-        const newQuantity = stock.quantity_available - quantityDispatched;
+        const newQuantity = Number(stock.quantity_available) - parsedQuantity;
         await dbPromise.query(
             "UPDATE camp_stock SET quantity_available = ? WHERE stock_id = ?",
-            [newQuantity, stockId]
+            [newQuantity, parsedStockId]
         );
 
         // Create camp dispatch history record
@@ -1053,7 +1209,7 @@ app.post("/dispatch-camp-stock", async (req, res) => {
             `INSERT INTO camp_dispatch_history
                 (camp_id, stock_id, resource_id, resource_name, quantity_dispatched, dispatch_date)
              VALUES (?, ?, ?, ?, ?, ?)`,
-            [campId, stockId, stock.resource_id, stock.resource_name, quantityDispatched, fulfillmentDate]
+            [activeCampId, parsedStockId, stock.resource_id, stock.resource_name, parsedQuantity, fulfillmentDate]
         );
 
         res.json({

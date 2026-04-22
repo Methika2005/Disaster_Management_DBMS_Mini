@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Admin - Request Management</title>
+    <title>Admin - Today's Activity</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -33,11 +33,10 @@
     </style>
 </head>
 <body class="bg-surface text-on-surface">
-<!-- Header -->
 <header class="bg-slate-50 shadow-sm sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-4">
         <h1 class="text-2xl font-extrabold text-primary">Equilibrium Relief</h1>
-        <span class="text-sm text-on-surface-variant">Admin - Request Management</span>
+        <span class="text-sm text-on-surface-variant">Admin - Today's Activity</span>
     </div>
     <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition-all flex items-center gap-2">
         <span class="material-symbols-outlined">logout</span>Logout
@@ -45,25 +44,49 @@
 </header>
 
 <div class="flex h-screen">
-    <!-- Sidebar -->
-    <aside class="hidden lg:flex flex-col w-64 bg-slate-100 border-r border-slate-200 p-6 overflow-y-auto">
+    <aside class="hidden lg:flex flex-col w-80 bg-slate-100 border-r border-slate-200 p-6 overflow-y-auto">
         <div class="mb-8">
-            <h2 class="text-lg font-bold text-primary">Admin Panel</h2>
-            <p class="text-xs text-on-surface-variant">Request Management</p>
+            <p class="text-xs uppercase tracking-[0.3em] text-on-surface-variant">Administrator</p>
+            <h2 class="mt-3 text-2xl font-extrabold text-primary" id="adminEmail">admin@sys.com</h2>
+            <p class="mt-2 text-sm text-on-surface-variant">System Administrator</p>
         </div>
-        
+
+        <div class="bg-white rounded-3xl shadow p-6 mb-8">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-on-surface-variant mb-4">Admin Details</h3>
+            <div class="space-y-4 text-sm">
+                <div>
+                    <p class="text-xs text-on-surface-variant">Role</p>
+                    <p class="font-medium text-on-surface">System Administrator</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant">Permission Level</p>
+                    <p class="font-medium text-on-surface">Full Access</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant">System Status</p>
+                    <p class="font-medium text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>Active
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2 mb-8">
+            <p class="text-xs uppercase tracking-[0.3em] text-on-surface-variant font-semibold mb-4">View Access</p>
+            <button onclick="openCampSelector()" class="w-full flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined">location_on</span>View Camps
+            </button>
+            <button onclick="openSupplierSelector()" class="w-full flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined">local_shipping</span>View Suppliers
+            </button>
+            <button onclick="openInventorySelector()" class="w-full flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined">inventory_2</span>View Inventories
+            </button>
+        </div>
+
         <nav class="space-y-2 flex-1">
-            <a href="admin.html" class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg font-medium">
-                <span class="material-symbols-outlined">description</span>Requests
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">dashboard</span>Dashboard
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">inventory_2</span>Inventory
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors">
-                <span class="material-symbols-outlined">local_shipping</span>Supply
+            <a href="admin.html" class="flex items-center gap-3 px-4 py-3 bg-slate-200 text-on-surface rounded-lg font-medium">
+                <span class="material-symbols-outlined">monitoring</span>Today's Activity
             </a>
         </nav>
 
@@ -72,213 +95,397 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 overflow-auto">
-        <div class="p-8 max-w-6xl mx-auto">
-            <!-- Page Header -->
+        <div class="p-8 max-w-7xl mx-auto">
             <div class="mb-8">
-                <h2 class="text-3xl font-extrabold text-on-surface mb-2">Resource Requests</h2>
-                <p class="text-on-surface-variant">Review and approve/reject camp requests for resources</p>
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-on-surface mb-2">Today's Operations Overview</h2>
+                        <p class="text-on-surface-variant">A clean, role-wise overview of everything camps, inventories, and suppliers have done today.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl shadow px-5 py-4 min-w-[240px]">
+                        <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Report Date</p>
+                        <p id="reportDate" class="mt-2 text-lg font-bold text-primary">Loading...</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Requests Table -->
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <!-- Table -->
+            <section class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4 mb-8">
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Total Activities</p>
+                    <p id="totalActivities" class="mt-3 text-4xl font-extrabold text-primary">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">All logged operations recorded for today</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Camp Managers</p>
+                    <p id="campManagerActions" class="mt-3 text-4xl font-extrabold text-primary">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">Requests raised from camps today</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Inventory Managers</p>
+                    <p id="inventoryManagerActions" class="mt-3 text-4xl font-extrabold text-primary">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">Dispatches and supplier orders created today</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Suppliers</p>
+                    <p id="supplierActions" class="mt-3 text-4xl font-extrabold text-primary">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">Supplier deliveries completed today</p>
+                </div>
+            </section>
+
+            <section class="grid gap-5 lg:grid-cols-3 mb-8">
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Requested Units</p>
+                    <p id="totalRequestedUnits" class="mt-3 text-3xl font-extrabold text-on-surface">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">Total quantity requested by camps today</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Dispatched Units</p>
+                    <p id="totalDispatchedUnits" class="mt-3 text-3xl font-extrabold text-on-surface">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">Quantity moved out by inventory managers today</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow p-6">
+                    <p class="text-xs uppercase tracking-[0.2em] text-on-surface-variant font-semibold">Delivered Units</p>
+                    <p id="totalDeliveredUnits" class="mt-3 text-3xl font-extrabold text-on-surface">0</p>
+                    <p class="mt-2 text-sm text-on-surface-variant">Quantity completed by suppliers today</p>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-3xl shadow overflow-hidden mb-8">
+                <div class="px-6 py-5 border-b border-slate-200 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-on-surface">Unified Activity Feed</h3>
+                        <p class="text-sm text-on-surface-variant">An organised list of all recorded tasks and operations for today.</p>
+                    </div>
+                    <button onclick="loadTodayActivity()" class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-base">refresh</span>Refresh
+                    </button>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Request ID</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Camp</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Resource</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Quantity</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Priority</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Role</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actor</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Activity</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Details</th>
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Date</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Actions</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase text-on-surface-variant">Reference</th>
                             </tr>
                         </thead>
-                        <tbody id="requestsTableBody" class="divide-y divide-slate-200">
-                            <!-- Rows will be inserted here -->
-                        </tbody>
+                        <tbody id="activityFeedBody" class="divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
+                <div id="activityFeedEmpty" class="text-center py-12 hidden">
+                    <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">event_busy</span>
+                    <p class="text-on-surface-variant text-lg">No operational activity recorded today</p>
+                    <p class="text-on-surface-variant text-sm">Once the teams do work today, it will show up here automatically.</p>
+                </div>
+            </section>
 
-                <!-- Empty State -->
-                <div id="emptyState" class="text-center py-12 hidden">
-                    <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
-                    <p class="text-on-surface-variant text-lg">No requests yet</p>
-                    <p class="text-on-surface-variant text-sm">Requests from camps will appear here</p>
+            <section class="grid gap-6 xl:grid-cols-3">
+                <div class="bg-white rounded-3xl shadow overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-on-surface">Camp Manager Activity</h3>
+                        <p class="text-sm text-on-surface-variant">Requests raised today</p>
+                    </div>
+                    <div id="campManagerList" class="divide-y divide-slate-200"></div>
+                    <div id="campManagerEmpty" class="text-center py-10 text-on-surface-variant hidden">No camp manager actions today</div>
                 </div>
 
-                <!-- Footer -->
-                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
-                    <span id="tableCount">Showing 0 requests</span>
+                <div class="bg-white rounded-3xl shadow overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-on-surface">Inventory Activity</h3>
+                        <p class="text-sm text-on-surface-variant">Dispatches and supplier orders created today</p>
+                    </div>
+                    <div id="inventoryManagerList" class="divide-y divide-slate-200"></div>
+                    <div id="inventoryManagerEmpty" class="text-center py-10 text-on-surface-variant hidden">No inventory manager actions today</div>
                 </div>
-            </div>
+
+                <div class="bg-white rounded-3xl shadow overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-on-surface">Supplier Activity</h3>
+                        <p class="text-sm text-on-surface-variant">Deliveries completed today</p>
+                    </div>
+                    <div id="supplierListToday" class="divide-y divide-slate-200"></div>
+                    <div id="supplierTodayEmpty" class="text-center py-10 text-on-surface-variant hidden">No supplier actions today</div>
+                </div>
+            </section>
         </div>
     </main>
 </div>
 
+<div id="campModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <h3 class="text-lg font-bold mb-4">Select a Camp</h3>
+        <div id="campList" class="space-y-2 max-h-96 overflow-y-auto mb-4">
+            <p class="text-center text-on-surface-variant">Loading camps...</p>
+        </div>
+        <button onclick="closeCampModal()" class="w-full px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
+    </div>
+</div>
+
+<div id="supplierModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <h3 class="text-lg font-bold mb-4">Select a Supplier</h3>
+        <div id="supplierList" class="space-y-2 max-h-96 overflow-y-auto mb-4">
+            <p class="text-center text-on-surface-variant">Loading suppliers...</p>
+        </div>
+        <button onclick="closeSupplierModal()" class="w-full px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
+    </div>
+</div>
+
+<div id="inventoryModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <h3 class="text-lg font-bold mb-4">Select an Inventory</h3>
+        <div id="inventoryList" class="space-y-2 max-h-96 overflow-y-auto mb-4">
+            <p class="text-center text-on-surface-variant">Loading inventories...</p>
+        </div>
+        <button onclick="closeInventoryModal()" class="w-full px-4 py-2 bg-slate-300 text-on-surface rounded-lg hover:bg-slate-400 transition-colors">Cancel</button>
+    </div>
+</div>
+
 <script>
-// ===== PAGE PROTECTION =====
 const isLoggedIn = localStorage.getItem("isLoggedIn");
 const userRole = localStorage.getItem("userRole");
+const userEmail = localStorage.getItem("userEmail");
 
 if (isLoggedIn !== "true" || userRole !== "Admin") {
     alert("Access Denied!");
     window.location.href = "login.html";
 }
 
-// ===== LOGOUT =====
+if (userEmail) {
+    document.getElementById("adminEmail").textContent = userEmail;
+}
+
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
 
-// ===== LOAD REQUESTS =====
-async function loadRequests() {
-    const tbody = document.getElementById("requestsTableBody");
-    const emptyState = document.getElementById("emptyState");
-    const tableCount = document.getElementById("tableCount");
-
-    try {
-        const response = await fetch("http://localhost:5000/requests");
-        const data = await response.json();
-
-        if (!data.success || !data.requests || data.requests.length === 0) {
-            tbody.innerHTML = "";
-            emptyState.classList.remove("hidden");
-            tableCount.textContent = "Showing 0 requests";
-            return;
-        }
-
-        emptyState.classList.add("hidden");
-        tbody.innerHTML = "";
-
-        data.requests.forEach((request) => {
-            const statusClass = getStatusClass(request.status);
-            const priorityClass = getPriorityClass(request.priority_level);
-            const actions = getActionButtons(request.request_id, request.status);
-
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
-                    <td class="px-6 py-4">${request.camp_name || 'N/A'}</td>
-                    <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
-                    <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${request.status}</span></td>
-                    <td class="px-6 py-4 text-sm text-on-surface-variant">${new Date(request.request_date).toLocaleDateString()}</td>
-                    <td class="px-6 py-4">
-                        ${actions}
-                    </td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-
-        tableCount.textContent = `Showing ${data.requests.length} request${data.requests.length !== 1 ? 's' : ''}`;
-
-    } catch (err) {
-        console.error("Error loading requests:", err);
-        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-red-600">Error loading requests</td></tr>';
-    }
-}
-
 function getStatusClass(status) {
-    switch(status) {
+    switch (status) {
         case "PENDING":
             return "bg-yellow-100 text-yellow-800";
         case "PARTIAL":
             return "bg-blue-100 text-blue-800";
         case "COMPLETED":
             return "bg-green-100 text-green-800";
+        case "APPROVED":
+            return "bg-emerald-100 text-emerald-800";
         default:
             return "bg-gray-100 text-gray-800";
     }
 }
 
-function getPriorityClass(priority) {
-    switch(priority) {
-        case "HIGH":
-            return "bg-red-100 text-red-800";
-        case "MEDIUM":
-            return "bg-yellow-100 text-yellow-800";
-        case "LOW":
-            return "bg-green-100 text-green-800";
+function getRoleClass(role) {
+    switch (role) {
+        case "Camp Manager":
+            return "bg-amber-100 text-amber-800";
+        case "Inventory Manager":
+            return "bg-blue-100 text-blue-800";
+        case "Supplier":
+            return "bg-emerald-100 text-emerald-800";
         default:
             return "bg-gray-100 text-gray-800";
     }
 }
 
-function getActionButtons(requestId, status) {
-    if (status === "COMPLETED") {
-        return '<span class="text-xs text-on-surface-variant">Completed</span>';
+function formatReportDate(dateString) {
+    if (!dateString) {
+        return "Today";
     }
-    
-    return `
-        <div class="flex gap-2">
-            <button onclick="approveRequest(${requestId})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
-                Approve
-            </button>
-            <button onclick="rejectRequest(${requestId})" class="px-3 py-1 bg-error text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">
-                Reject
-            </button>
-        </div>
-    `;
+
+    return new Date(`${dateString}T00:00:00`).toLocaleDateString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
 }
 
-// ===== APPROVE REQUEST =====
-async function approveRequest(requestId) {
-    if (!confirm("Approve this request?")) return;
+function renderRoleCards(containerId, emptyId, items) {
+    const container = document.getElementById(containerId);
+    const emptyState = document.getElementById(emptyId);
+
+    if (!items || items.length === 0) {
+        container.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+    }
+
+    emptyState.classList.add("hidden");
+    container.innerHTML = items.map((item) => `
+        <article class="px-6 py-5">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold text-on-surface">${item.actorName}</p>
+                    <p class="text-xs uppercase tracking-[0.18em] text-on-surface-variant mt-1">${item.action}</p>
+                </div>
+                <span class="px-2 py-1 rounded-full text-xs font-semibold ${getStatusClass(item.status)}">${item.status}</span>
+            </div>
+            <p class="mt-3 text-sm text-on-surface">${item.detail}</p>
+            <div class="mt-3 flex items-center justify-between gap-3 text-xs text-on-surface-variant">
+                <span>${item.meta || "No extra details"}</span>
+                <span class="font-semibold">${item.referenceLabel}</span>
+            </div>
+        </article>
+    `).join("");
+}
+
+async function loadTodayActivity() {
+    try {
+        const response = await fetch("http://localhost:5000/admin/today-activity");
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.error || "Could not load activity dashboard");
+        }
+
+        document.getElementById("reportDate").textContent = formatReportDate(data.today);
+        document.getElementById("totalActivities").textContent = data.summary.totalActivities || 0;
+        document.getElementById("campManagerActions").textContent = data.summary.campManagerActions || 0;
+        document.getElementById("inventoryManagerActions").textContent = data.summary.inventoryManagerActions || 0;
+        document.getElementById("supplierActions").textContent = data.summary.supplierActions || 0;
+        document.getElementById("totalRequestedUnits").textContent = data.summary.totalRequestedUnits || 0;
+        document.getElementById("totalDispatchedUnits").textContent = data.summary.totalDispatchedUnits || 0;
+        document.getElementById("totalDeliveredUnits").textContent = data.summary.totalDeliveredUnits || 0;
+
+        const feedBody = document.getElementById("activityFeedBody");
+        const feedEmpty = document.getElementById("activityFeedEmpty");
+
+        if (!data.feed || data.feed.length === 0) {
+            feedBody.innerHTML = "";
+            feedEmpty.classList.remove("hidden");
+        } else {
+            feedEmpty.classList.add("hidden");
+            feedBody.innerHTML = data.feed.map((item) => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${getRoleClass(item.role)}">${item.role}</span>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-on-surface">${item.actorName}</td>
+                    <td class="px-6 py-4 text-on-surface">${item.action}</td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm text-on-surface">${item.detail}</p>
+                        <p class="text-xs text-on-surface-variant mt-1">${item.meta || ""}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${getStatusClass(item.status)}">${item.status}</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-primary">${item.referenceLabel}</td>
+                </tr>
+            `).join("");
+        }
+
+        renderRoleCards("campManagerList", "campManagerEmpty", data.roleSections.campManagers || []);
+        renderRoleCards("inventoryManagerList", "inventoryManagerEmpty", data.roleSections.inventoryManagers || []);
+        renderRoleCards("supplierListToday", "supplierTodayEmpty", data.roleSections.suppliers || []);
+    } catch (err) {
+        console.error("Error loading today activity:", err);
+        document.getElementById("activityFeedBody").innerHTML = '<tr><td colspan="6" class="px-6 py-6 text-center text-red-600">Error loading today activity dashboard</td></tr>';
+    }
+}
+
+loadTodayActivity();
+
+async function openCampSelector() {
+    const modal = document.getElementById("campModal");
+    const campList = document.getElementById("campList");
+    modal.classList.remove("hidden");
 
     try {
-        const response = await fetch(`http://localhost:5000/requests/${requestId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "PARTIAL" })
-        });
-
+        const response = await fetch("http://localhost:5000/camps");
         const data = await response.json();
-        if (data.success) {
-            alert("Request approved!");
-            loadRequests();
+
+        if (data.success && data.camps.length > 0) {
+            campList.innerHTML = data.camps.map(camp => `
+                <button onclick="viewCamp(${camp.camp_id})" class="w-full text-left px-4 py-3 bg-slate-50 hover:bg-primary hover:text-white rounded-lg transition-colors border border-slate-200 hover:border-primary">
+                    <p class="font-medium">${camp.name}</p>
+                </button>
+            `).join("");
         } else {
-            alert("Error: " + data.message);
+            campList.innerHTML = '<p class="text-center text-on-surface-variant">No camps available</p>';
         }
     } catch (err) {
-        alert("Error approving request");
-        console.error(err);
+        console.error("Error loading camps:", err);
+        campList.innerHTML = '<p class="text-center text-red-600">Error loading camps</p>';
     }
 }
 
-// ===== REJECT REQUEST =====
-async function rejectRequest(requestId) {
-    if (!confirm("Reject this request?")) return;
+function closeCampModal() {
+    document.getElementById("campModal").classList.add("hidden");
+}
+
+function viewCamp(campId) {
+    window.location.href = `camp_manager.html?camp_id=${campId}&readOnly=true`;
+}
+
+async function openSupplierSelector() {
+    const modal = document.getElementById("supplierModal");
+    const supplierList = document.getElementById("supplierList");
+    modal.classList.remove("hidden");
 
     try {
-        const response = await fetch(`http://localhost:5000/requests/${requestId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "COMPLETED" })
-        });
-
+        const response = await fetch("http://localhost:5000/suppliers");
         const data = await response.json();
-        if (data.success) {
-            alert("Request rejected!");
-            loadRequests();
+
+        if (data.success && data.suppliers.length > 0) {
+            supplierList.innerHTML = data.suppliers.map(supplier => `
+                <button onclick="viewSupplier(${supplier.supplier_id})" class="w-full text-left px-4 py-3 bg-slate-50 hover:bg-primary hover:text-white rounded-lg transition-colors border border-slate-200 hover:border-primary">
+                    <p class="font-medium">${supplier.supplier_name}</p>
+                </button>
+            `).join("");
         } else {
-            alert("Error: " + data.message);
+            supplierList.innerHTML = '<p class="text-center text-on-surface-variant">No suppliers available</p>';
         }
     } catch (err) {
-        alert("Error rejecting request");
-        console.error(err);
+        console.error("Error loading suppliers:", err);
+        supplierList.innerHTML = '<p class="text-center text-red-600">Error loading suppliers</p>';
     }
 }
 
-// Load requests on page load
-loadRequests();
+function closeSupplierModal() {
+    document.getElementById("supplierModal").classList.add("hidden");
+}
+
+function viewSupplier(supplierId) {
+    window.location.href = `supplier.html?supplier_id=${supplierId}&readOnly=true`;
+}
+
+async function openInventorySelector() {
+    const modal = document.getElementById("inventoryModal");
+    const inventoryList = document.getElementById("inventoryList");
+    modal.classList.remove("hidden");
+
+    try {
+        const response = await fetch("http://localhost:5000/inventories");
+        const data = await response.json();
+
+        if (data.success && data.inventories.length > 0) {
+            inventoryList.innerHTML = data.inventories.map(inventory => `
+                <button onclick="viewInventory(${inventory.inventory_id})" class="w-full text-left px-4 py-3 bg-slate-50 hover:bg-primary hover:text-white rounded-lg transition-colors border border-slate-200 hover:border-primary">
+                    <p class="font-medium">${inventory.name}</p>
+                    <p class="text-xs mt-1">${inventory.location || 'Location not specified'}</p>
+                </button>
+            `).join("");
+        } else {
+            inventoryList.innerHTML = '<p class="text-center text-on-surface-variant">No inventories available</p>';
+        }
+    } catch (err) {
+        console.error("Error loading inventories:", err);
+        inventoryList.innerHTML = '<p class="text-center text-red-600">Error loading inventories</p>';
+    }
+}
+
+function closeInventoryModal() {
+    document.getElementById("inventoryModal").classList.add("hidden");
+}
+
+function viewInventory(inventoryId) {
+    window.location.href = `inventory_manager.html?inventory_id=${inventoryId}&readOnly=true`;
+}
 </script>
 </body>
 </html>
