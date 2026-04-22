@@ -296,6 +296,12 @@ function logout() {
     window.location.href = "login.html";
 }
 
+let inventoryAvailabilityByResource = {};
+
+function getAvailableInventory(resourceId) {
+    return inventoryAvailabilityByResource[resourceId] || 0;
+}
+
 // ===== LOAD INVENTORY DETAILS =====
 async function loadInventoryDetails() {
     const userEmail = localStorage.getItem("userEmail") || "inventory@sys.com";
@@ -357,6 +363,12 @@ async function loadPendingRequests() {
 
         pendingRequests.forEach((request) => {
             const priorityClass = getPriorityClass(request.priority_level);
+            const remainingQuantity = request.remaining_quantity || request.quantity_required;
+            const availableInventory = getAvailableInventory(request.resource_id);
+            const canSupply = availableInventory > 0;
+            const actionButton = canSupply
+                ? `<button onclick='openSupplyModal(${request.request_id}, ${remainingQuantity}, ${request.resource_id}, ${JSON.stringify(request.resource_name || 'N/A')})' class="px-3 py-1 bg-secondary text-white hover:opacity-90 rounded text-xs font-medium transition-opacity">Supply</button>`
+                : `<button type="button" disabled class="px-3 py-1 bg-slate-200 text-slate-500 cursor-not-allowed rounded text-xs font-medium">No Stock</button>`;
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-medium text-primary">#${request.request_id}</td>
@@ -364,11 +376,11 @@ async function loadPendingRequests() {
                     <td class="px-6 py-4">${request.resource_name || 'N/A'}</td>
                     <td class="px-6 py-4 font-medium">${request.quantity_required}</td>
                     <td class="px-6 py-4 font-medium">${request.quantity_supplied || 0}</td>
-                    <td class="px-6 py-4 font-medium">${request.remaining_quantity || request.quantity_required}</td>
+                    <td class="px-6 py-4 font-medium">${remainingQuantity}</td>
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium ${priorityClass}">${request.priority_level}</span></td>
                     <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">${request.status || 'PENDING'}</span></td>
                     <td class="px-6 py-4">
-                        <button onclick="openSupplyModal(${request.request_id}, ${request.remaining_quantity || request.quantity_required})" class="px-3 py-1 bg-secondary text-white rounded text-xs font-medium hover:opacity-90 transition-opacity">Supply</button>
+                        ${actionButton}
                     </td>
                 </tr>
             `;
@@ -601,19 +613,33 @@ document.getElementById("supplierOrderForm").addEventListener("submit", async fu
     }
 });
 
-function openSupplyModal(requestId, remainingQuantity) {
+function openSupplyModal(requestId, remainingQuantity, resourceId, resourceName) {
     const quantityInput = document.getElementById("supplyQuantity");
+    const availableInventory = getAvailableInventory(resourceId);
+    const maxSupplyQuantity = Math.min(remainingQuantity, availableInventory);
 
     document.getElementById("supplyRequestId").value = requestId;
-    quantityInput.max = remainingQuantity;
-    quantityInput.value = remainingQuantity;
-    document.getElementById("supplyLimitText").textContent = `Remaining quantity: ${remainingQuantity}`;
+    quantityInput.max = maxSupplyQuantity;
+    quantityInput.value = maxSupplyQuantity > 0 ? maxSupplyQuantity : "";
+    quantityInput.disabled = maxSupplyQuantity <= 0;
+    document.getElementById("supplyLimitText").innerHTML =
+        `Resource: ${resourceName}<br>Request remaining: ${remainingQuantity}<br>Inventory available: ${availableInventory}`;
+
+    const submitButton = document.querySelector("#supplyRequestForm button[type='submit']");
+    submitButton.disabled = maxSupplyQuantity <= 0;
+    submitButton.classList.toggle("opacity-50", maxSupplyQuantity <= 0);
+    submitButton.classList.toggle("cursor-not-allowed", maxSupplyQuantity <= 0);
+
     document.getElementById("supplyModal").classList.remove("hidden");
 }
 
 function closeSupplyModal() {
     document.getElementById("supplyModal").classList.add("hidden");
     document.getElementById("supplyRequestForm").reset();
+    document.getElementById("supplyQuantity").disabled = false;
+    const submitButton = document.querySelector("#supplyRequestForm button[type='submit']");
+    submitButton.disabled = false;
+    submitButton.classList.remove("opacity-50", "cursor-not-allowed");
 }
 
 document.getElementById("supplyRequestForm").addEventListener("submit", async function(e) {
@@ -629,7 +655,7 @@ document.getElementById("supplyRequestForm").addEventListener("submit", async fu
     }
 
     if (quantitySupplied > maxQuantity) {
-        alert(`Quantity cannot be more than remaining quantity (${maxQuantity}).`);
+        alert(`Quantity cannot be more than allowed quantity (${maxQuantity}).`);
         return;
     }
 
@@ -645,8 +671,7 @@ document.getElementById("supplyRequestForm").addEventListener("submit", async fu
         if (data.success) {
             alert("Resources supplied successfully.");
             closeSupplyModal();
-            loadInventory();
-            loadPendingRequests();
+            loadInventory().then(() => loadPendingRequests());
             loadCompletedRequests();
         } else {
             alert("Error: " + (data.message || data.error || "Could not supply resources."));
@@ -675,6 +700,7 @@ async function loadInventory() {
         }
 
         if (inventoryRows.length === 0) {
+            inventoryAvailabilityByResource = {};
             tbody.innerHTML = "";
             emptyState.classList.remove("hidden");
             count.textContent = "Showing 0 items";
@@ -683,8 +709,11 @@ async function loadInventory() {
 
         emptyState.classList.add("hidden");
         tbody.innerHTML = "";
+        inventoryAvailabilityByResource = {};
 
-        data.inventory.forEach((stock) => {
+        inventoryRows.forEach((stock) => {
+            const resourceId = stock.resource_id;
+            inventoryAvailabilityByResource[resourceId] = (inventoryAvailabilityByResource[resourceId] || 0) + Number(stock.quantity_available || 0);
             const statusClass = stock.quantity_available < stock.minimum_threshold ? "bg-red-100 text-red-800" : stock.quantity_available === 0 ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800";
             const status = stock.quantity_available < stock.minimum_threshold ? "Critical" : stock.quantity_available === 0 ? "Out of stock" : "In stock";
 
@@ -700,7 +729,7 @@ async function loadInventory() {
             tbody.innerHTML += row;
         });
 
-        count.textContent = `Showing ${data.inventory.length} item${data.inventory.length !== 1 ? 's' : ''}`;
+        count.textContent = `Showing ${inventoryRows.length} item${inventoryRows.length !== 1 ? 's' : ''}`;
 
     } catch (err) {
         console.error("Error loading inventory:", err);
@@ -724,8 +753,7 @@ function getPriorityClass(priority) {
 // Load on page load
 window.addEventListener("load", () => {
     loadInventoryDetails();
-    loadInventory();
-    loadPendingRequests();
+    loadInventory().then(() => loadPendingRequests());
     loadSupplierFormOptions();
     loadSupplierOrderStatus();
     loadCompletedRequests();

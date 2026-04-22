@@ -722,7 +722,8 @@ app.post("/dispatch", async (req, res) => {
         // Get inventory stock
         const [stocks] = await dbPromise.query(
             `SELECT * FROM inventory_stock 
-             WHERE resource_id = ? 
+             WHERE resource_id = ?
+             ORDER BY quantity_available DESC
              LIMIT 1`,
             [request.resource_id]
         );
