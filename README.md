@@ -115,20 +115,6 @@ The backend reads these environment variables:
 - `DB_NAME`
 - `PORT`
 
-If you do not set them, `server.js` falls back to:
-
-```js
-host: "localhost"
-user: "root"
-password: "Srushti@512"
-database: "disaster_relief_db_final"
-port: 5000
-```
-
-You can either:
-- keep the defaults in your local environment, or
-- set your own environment variables before starting the server
-
 Example in PowerShell:
 
 ```powershell
