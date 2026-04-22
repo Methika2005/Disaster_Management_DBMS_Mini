@@ -115,7 +115,7 @@
                             </table>
                         </div>
                         <div id="emptyPendingOrders" class="text-center py-10 text-on-surface-variant hidden">
-                            No pending supplier orders
+                            No supplier requests assigned yet
                         </div>
                         <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
                             <span id="pendingOrdersCount">Showing 0 orders</span>
@@ -146,7 +146,8 @@
                         </div>
                         <div id="emptyState" class="text-center py-10 hidden">
                             <span class="material-symbols-outlined text-6xl text-slate-300 block mb-3">inbox</span>
-                            <p class="text-on-surface-variant text-lg">No supplier deliveries yet</p>
+                            <p class="text-on-surface-variant text-lg">No completed supplier deliveries yet</p>
+                            <p class="text-on-surface-variant text-sm mt-2">Completed orders will appear here once this supplier starts fulfilling requests.</p>
                         </div>
                         <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 text-xs text-on-surface-variant">
                             <span id="tableCount">Showing 0 supplies</span>
@@ -208,15 +209,38 @@ function applyRoleLabels() {
 
 let supplierPendingOrders = [];
 let supplierCompletedOrders = [];
+let supplierProfile = null;
+
+async function loadSupplierProfile() {
+    if (!supplierId) {
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/suppliers");
+        const data = await response.json();
+
+        if (data.success && Array.isArray(data.suppliers)) {
+            supplierProfile = data.suppliers.find((supplier) => String(supplier.supplier_id) === String(supplierId)) || null;
+        }
+    } catch (err) {
+        console.error("Error loading supplier profile:", err);
+    }
+}
 
 function updateSupplierDetails() {
     const allOrders = [...supplierPendingOrders, ...supplierCompletedOrders];
     const firstOrder = allOrders[0] || {};
     const userEmail = localStorage.getItem("userEmail") || "supplier@sys.com";
+    const supplierName = firstOrder.supplier_name
+        || (supplierProfile && supplierProfile.supplier_name)
+        || "No supplier requests assigned yet";
+    const supplierWarehouse = firstOrder.inventory_name
+        || (allOrders.length > 0 ? "Warehouse details unavailable" : "No warehouse assigned yet");
 
     document.getElementById("supplierEmail").textContent = userEmail;
-    document.getElementById("supplierName").textContent = firstOrder.supplier_name || "N/A";
-    document.getElementById("supplierWarehouse").textContent = firstOrder.inventory_name || "N/A";
+    document.getElementById("supplierName").textContent = supplierName;
+    document.getElementById("supplierWarehouse").textContent = supplierWarehouse;
     document.getElementById("supplierPendingCount").textContent = supplierPendingOrders.length;
     document.getElementById("supplierCompletedCount").textContent = supplierCompletedOrders.length;
 }
@@ -375,8 +399,11 @@ function getPriorityClass(priority) {
 // Load on page load
 window.addEventListener("load", () => {
     applyRoleLabels();
-    loadPendingSupplierOrders();
-    loadSupplyHistory();
+    loadSupplierProfile().finally(() => {
+        updateSupplierDetails();
+        loadPendingSupplierOrders();
+        loadSupplyHistory();
+    });
     
     // Disable supply buttons when in read-only mode
     if (readOnlyMode) {
