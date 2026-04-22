@@ -115,21 +115,7 @@ The backend reads these environment variables:
 - `DB_USER`
 - `DB_PASSWORD`
 - `DB_NAME`
-- `PORT`
-
-If you do not set them, `server.js` falls back to:
-
-```js
-host: "localhost"
-user: "root"
-password: "Srushti@512"
-database: "disaster_relief_db_final"
-port: 5000
-```
-
-You can either:
-- keep the defaults in your local environment, or
-- set your own environment variables before starting the server
+- `PORT````
 
 Example in PowerShell:
 
@@ -238,6 +224,25 @@ The application currently includes:
 - automated tests for API routes
 - better validation and error messaging
 - deployment-ready production configuration
+
+## Tools and Resources Used
+
+This project was developed using a combination of database design tools, development environments, UI inspiration platforms, and AI-assisted coding support.
+
+- **draw.io**  
+  Used to design the Entity Relationship Diagram (ERD) for structuring the database.
+
+- **Stitch**  
+  Provided initial UI inspiration and base layout ideas, later customized to fit project requirements.
+
+- **Visual Studio Code**  
+  Served as the primary development environment for writing and managing the codebase.
+
+- **ChatGPT, Codex, VS Code Agent, and Claude**  
+  Used as AI-assisted development tools for debugging, code optimization, interface refinement, and feature enhancements.
+
+- **GitHub**  
+  Used for version control and tracking project progress.
 
 ## Authoring Note
 
